@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Shadowsocks-face
+GenericName=Shadowsocks-face
+Comment=Shadowsocks-libev GUI Wrapper
+Exec=ss-face
+Icon=ss-face
+Terminal=false
+Type=Application
+Categories=Network;
+StartupNotify=true

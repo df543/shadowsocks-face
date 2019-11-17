@@ -1,0 +1,23 @@
+<RCC>
+    <qresource prefix="/prog-icon">
+        <file alias="icon">ss-face.png</file>
+    </qresource>
+    <qresource prefix="/translations">
+        <file alias="zh_CN">translations/zh_CN.qm</file>
+    </qresource>
+    <qresource prefix="/icons">
+        <file alias="application-exit">icons/application-exit.png</file>
+        <file alias="document-edit">icons/document-edit.png</file>
+        <file alias="document-export">icons/document-export.png</file>
+        <file alias="document-import">icons/document-import.png</file>
+        <file alias="document-share">icons/document-share.png</file>
+        <file alias="edit-guides">icons/edit-guides.png</file>
+        <file alias="help-about">icons/help-about.png</file>
+        <file alias="list-add">icons/list-add.png</file>
+        <file alias="list-remove">icons/list-remove.png</file>
+        <file alias="network-connect">icons/network-connect.png</file>
+        <file alias="network-disconnect">icons/network-disconnect.png</file>
+        <file alias="view-refresh">icons/view-refresh.png</file>
+        <file alias="edit-paste">icons/edit-paste.png</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>EditDialog</class>
+ <widget class="QDialog" name="EditDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>420</width>
+    <height>490</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string/>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QFrame" name="frame">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="6" column="4">
+       <widget class="QLineEdit" name="lineEdit_localAddr">
+        <property name="text">
+         <string notr="true">127.0.0.1</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="4">
+       <widget class="QComboBox" name="comboBox_method">
+        <item>
+         <property name="text">
+          <string notr="true">chacha20-ietf-poly1305</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string notr="true">aes-256-gcm</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string notr="true">aes-192-gcm</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string notr="true">aes-128-gcm</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string notr="true">aes-256-cfb</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string notr="true">aes-192-cfb</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string notr="true">aes-128-cfb</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string notr="true">aes-256-ctr</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string notr="true">aes-192-ctr</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string notr="true">aes-128-ctr</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="label_method">
+        <property name="text">
+         <string>Encryption Method</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4">
+       <widget class="QLineEdit" name="lineEdit_name"/>
+      </item>
+      <item row="0" column="0" colspan="2">
+       <widget class="QLabel" name="label_name">
+        <property name="text">
+         <string>Profile Name</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="4">
+       <widget class="QLineEdit" name="lineEdit_password"/>
+      </item>
+      <item row="5" column="0" colspan="4">
+       <widget class="QLabel" name="label_password">
+        <property name="text">
+         <string>Password</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="0">
+       <widget class="QLabel" name="label_mode">
+        <property name="text">
+         <string>Mode</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4">
+       <widget class="QLineEdit" name="lineEdit_serverAddr"/>
+      </item>
+      <item row="10" column="4">
+       <widget class="QCheckBox" name="checkBox_fastopen">
+        <property name="text">
+         <string>Enable TCP fast open</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="3">
+       <widget class="QLabel" name="label_serverAddr">
+        <property name="text">
+         <string>Server Address</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="4">
+       <widget class="QComboBox" name="comboBox_mode">
+        <item>
+         <property name="text">
+          <string notr="true">tcp_only</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string notr="true">tcp_and_udp</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string notr="true">udp_only</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_serverPort">
+        <property name="text">
+         <string>Server Port</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0">
+       <widget class="QLabel" name="label_timeout">
+        <property name="text">
+         <string>Timeout</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0" colspan="2">
+       <widget class="QLabel" name="label_localPort">
+        <property name="text">
+         <string>Local Port</string>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="0">
+       <widget class="QLabel" name="label_fastopen">
+        <property name="text">
+         <string>Fast Open</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="4">
+       <widget class="QSpinBox" name="spinBox_timeout">
+        <property name="minimum">
+         <number>10</number>
+        </property>
+        <property name="maximum">
+         <number>3600</number>
+        </property>
+        <property name="singleStep">
+         <number>10</number>
+        </property>
+        <property name="value">
+         <number>60</number>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="4">
+       <widget class="QSpinBox" name="spinBox_serverPort">
+        <property name="maximum">
+         <number>65535</number>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="4">
+       <widget class="QSpinBox" name="spinBox_localPort">
+        <property name="maximum">
+         <number>65535</number>
+        </property>
+        <property name="value">
+         <number>1080</number>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel" name="label_localAddr">
+        <property name="text">
+         <string>Local Address</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::MinimumExpanding</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>10</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>lineEdit_name</tabstop>
+  <tabstop>lineEdit_serverAddr</tabstop>
+  <tabstop>spinBox_serverPort</tabstop>
+  <tabstop>comboBox_method</tabstop>
+  <tabstop>lineEdit_password</tabstop>
+  <tabstop>lineEdit_localAddr</tabstop>
+  <tabstop>spinBox_localPort</tabstop>
+  <tabstop>spinBox_timeout</tabstop>
+  <tabstop>comboBox_mode</tabstop>
+  <tabstop>checkBox_fastopen</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>EditDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
