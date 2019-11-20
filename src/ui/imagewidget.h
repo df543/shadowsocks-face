@@ -5,9 +5,12 @@
 
 class ImageWidget: public QWidget {
     Q_OBJECT
+
 public:
     explicit ImageWidget(QWidget *parent = nullptr): QWidget(parent) {}
-    void setImage(const QImage &image) { _image = image; }
+    void setImage(const QImage &image) {
+        _image = image;
+    }
 
 private:
     QImage _image;

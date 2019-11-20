@@ -5,7 +5,11 @@
 #include <assert.h>
 
 // c++
-#ifdef __cplusplus
+#include <functional>
+#include <iostream>
+#include <exception>
+#include <stdexcept>
+
 // qt
 #include <QAction>
 #include <QApplication>
@@ -33,11 +37,5 @@
 #include <QToolBar>
 #include <QTranslator>
 #include <QUuid>
-// std
-#include <functional>
-#include <iostream>
-#include <exception>
-#include <stdexcept>
-#endif // __cplusplus
 
 #endif // PCH_HPP

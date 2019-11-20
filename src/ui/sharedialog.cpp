@@ -3,15 +3,15 @@
 
 #include "qrlib/qreasy.h"
 
-ShareDialog::ShareDialog(QString name, QJsonObject c, QWidget *parent): QDialog(parent), ui(new Ui::ShareDialog) {
+ShareDialog::ShareDialog(const Config &config, QWidget *parent): QDialog(parent), ui(new Ui::ShareDialog) {
     ui->setupUi(this);
-    setWindowTitle(tr("Share '%1'").arg(name));
+    setWindowTitle(tr("Share '%1'").arg(config.remarks));
 
     QString uriContent = QString("%1:%2@%3:%4")
-                         .arg(c["method"].toString())
-                         .arg(c["password"].toString())
-                         .arg(c["server"].toString())
-                         .arg(c["server_port"].toInt());
+                         .arg(config.method)
+                         .arg(config.password)
+                         .arg(config.server)
+                         .arg(config.server_port);
     QString uri = QString("ss://%1").arg(QString(uriContent.toUtf8().toBase64()).replace("=", ""));
     ui->textBrowser->setText(uri);
 

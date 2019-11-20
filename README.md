@@ -1,8 +1,8 @@
-# Shadowsocks face
+# Shadowsocks Face
 
 shadowsocks-libev client gui wrapper.
 
-## Build
+## Build and install
 
 First, install qt5 development package:
 
@@ -19,6 +19,8 @@ cd Shadowsocks-Face; mkdir build; cd build
 qmake-qt5 .. || qmake ..
 make
 ```
+
+Also available from [AUR](https://aur.archlinux.org/packages/ss-face/).
 
 ## Troubleshooting
 

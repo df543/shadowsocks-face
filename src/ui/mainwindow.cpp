@@ -29,17 +29,17 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 
     ui->setupUi(this);
     ui->configTable->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    connect(ui->configTable, &QTableWidget::itemSelectionChanged, this, &MainWindow::checkCurrentRow);
 
     if (!QDir(dirPath).mkpath("."))
         throw std::runtime_error("couldn't create config dir");
-    ss_configStorage = new SSConfigStorage(dirPath, this);
-    ss_processlist = new SSProcessList(dirPath, this);
-    loadAutoConnect();
-    connect(ss_processlist, &SSProcessList::procChanged, this, &MainWindow::saveAutoConnect);
+    configManager = new ConfigManager(dirPath, this);
+    processManager = new ProcessManager(dirPath, this);
+    connect(processManager, &ProcessManager::procChanged, this, &MainWindow::saveAutoConnect);
+    connect(processManager, &ProcessManager::procChanged, this, &MainWindow::sync);
 
-    connect(ss_configStorage, &SSConfigStorage::dataChanged, this, &MainWindow::sync);
-    connect(ss_processlist, &SSProcessList::procChanged, this, &MainWindow::sync);
-    connect(ui->configTable, &QTableWidget::itemSelectionChanged, this, &MainWindow::checkCurrentRow);
+    reloadConfig();
+    loadAutoConnect();
     sync();
     checkCurrentRow();
 
@@ -81,24 +81,24 @@ void MainWindow::onActivate() {
 }
 
 void MainWindow::sync() {
-    ui->configTable->setRowCount(ss_configStorage->size());
-    int cnt = 0;
-    for (auto i = ss_configStorage->cbegin(); i != ss_configStorage->cend(); ++i, ++cnt) {
-        ui->configTable->setItem(cnt, 0, new QTableWidgetItem(i.key()));
-        QString serverInfo = (*i)["server"].toVariant().toString() + ":" + (*i)["server_port"].toVariant().toString();
-        ui->configTable->setItem(cnt, 1, new QTableWidgetItem(serverInfo));
+    ui->configTable->setRowCount(configData.size());
+    for (int i = 0; i < configData.size(); i++) {
+        const Config &config = configData[i];
+        ui->configTable->setItem(i, 0, new QTableWidgetItem(config.remarks));
+        ui->configTable->setItem(i, 1, new QTableWidgetItem(config.server + ":" + QString::number(config.server_port)));
         QString local;
-        if (i->contains("local_address") && (*i)["local_address"].toString() != "127.0.0.1")
-            local = (*i)["local_address"].toString() + ":" + (*i)["local_port"].toVariant().toString();
-        else
-            local = (*i)["local_port"].toVariant().toString();
-        ui->configTable->setItem(cnt, 2, new QTableWidgetItem(local));
-
-        if (ss_processlist->isRunning(i.key()))
-            setRow(cnt, true);
+        if (config.local_address != "127.0.0.1") local += config.local_address + ":";
+        local += QString::number(config.local_port);
+        ui->configTable->setItem(i, 2, new QTableWidgetItem(local));
+        if (processManager->isRunning(config.id))
+            setRow(i, true);
     }
-
     ui->configTable->clearSelection();
+}
+
+void MainWindow::reloadConfig() {
+    configData = configManager->query();
+    sync();
 }
 
 void MainWindow::setRow(int row, bool bold) {
@@ -110,8 +110,9 @@ void MainWindow::setRow(int row, bool bold) {
 
 void MainWindow::checkCurrentRow() {
     if (ui->configTable->selectedRanges().size()) {
-        QString name = ui->configTable->item(ui->configTable->currentRow(), 0)->text();
-        bool connected = ss_processlist->isRunning(name);
+        int row = ui->configTable->currentRow();
+        int id = configData[row].id;
+        bool connected = processManager->isRunning(id);
         ui->actionConnect->setEnabled(!connected);
         ui->actionDisconnect->setEnabled(connected);
         ui->actionEdit->setEnabled(!connected);
@@ -126,46 +127,51 @@ void MainWindow::checkCurrentRow() {
     }
 }
 
-bool MainWindow::_start(QString name) {
-    auto p = ss_processlist->start(name);
+bool MainWindow::startConfig(const Config &config) {
+    auto p = processManager->start(config.id);
     if (p) {
-        connect(p, &QProcess::readyReadStandardOutput, [this, name, p] {
-            ui->logArea->append("<b>" + name + "</b><br/>"
-                                "<span style='color:DimGray'>" +
-                                QString(p->readAllStandardOutput()).replace("\n", "<br/>") +
-                                "</span>");
+        connect(p, &QProcess::readyReadStandardOutput, [this, config, p] {
+            ui->logArea->append(
+                "<b>" + config.remarks + "</b><br/>"
+                "<span style='color:DimGray'>" + QString(p->readAllStandardOutput()).replace("\n", "<br/>") + "</span>"
+            );
         });
-        connect(p, &QProcess::readyReadStandardError, [this, name, p] {
-            ui->logArea->append("<b>" + name + "</b><br/>"
-                                "<span style='color:BlueViolet'>" +
-                                QString(p->readAllStandardError()).replace("\n", "<br/>") +
-                                "</span>");
+        connect(p, &QProcess::readyReadStandardError, [this, config, p] {
+            ui->logArea->append(
+                "<b>" + config.remarks + "</b><br/>"
+                "<span style='color:BlueViolet'>" + QString(p->readAllStandardError()).replace("\n", "<br/>") + "</span>"
+            );
         });
         return true;
     } else {
-        ui->logArea->append("<b>" + name + "</b><br />"
-                            "<span style='color:Red'>Failed to start</span>");
+        ui->logArea->append(
+            "<b>" + config.remarks + "</b><br />"
+            "<span style='color:Red'>Failed to start</span>"
+        );
         return false;
     }
 }
 
 void MainWindow::onConnect() {
-    int cr = ui->configTable->currentRow();
-    QString name = ui->configTable->item(cr, 0)->text();
-    if (!_start(name))
-        onRefresh();
+    int row = ui->configTable->currentRow();
+    if (!startConfig(configData[row]))
+        sync();
 }
 
 void MainWindow::onDisconnect() {
-    int cr = ui->configTable->currentRow();
-    QString name = ui->configTable->item(cr, 0)->text();
-    ss_processlist->terminate(name);
+    int row = ui->configTable->currentRow();
+    int id = configData[row].id;
+    processManager->terminate(id);
 }
 
 void MainWindow::onManually() {
-    EditDialog editDialog(QString(), QJsonObject(), true, this);
-    connect(&editDialog, &EditDialog::submit, ss_configStorage, &SSConfigStorage::add);
-    editDialog.exec();
+    Config toAdd;
+    EditDialog editDialog(toAdd, this);
+    if (editDialog.exec() == QDialog::Accepted) {
+        configManager->add(toAdd);
+        configData.append(toAdd);
+        sync();
+    }
 }
 
 void MainWindow::onPaste() {
@@ -176,16 +182,16 @@ void MainWindow::onPaste() {
     QRegExp sip001("ss://(.+)");
     QRegExp sip002("ss://(.+)@(.+):(\\d+)(#.+)?");
     QString name;
-    QJsonObject config;
+    Config toAdd;
     if (sip002.exactMatch(s)) {
         name = sip002.cap(4);
-        config["server"] = sip002.cap(2);
-        config["server_port"] = sip002.cap(3).toInt();
+        toAdd.server = sip002.cap(2);
+        toAdd.server_port = sip002.cap(3).toInt();
         QString hostinfo = QByteArray::fromBase64(sip002.cap(1).toUtf8());
         QRegExp reg("(.+):(.+)");
         reg.indexIn(hostinfo);
-        config["method"] = reg.cap(1);
-        config["password"] = reg.cap(2);
+        toAdd.method = reg.cap(1);
+        toAdd.password = reg.cap(2);
     } else if (sip001.exactMatch(s)) {
         QString info = sip001.cap(1);
         if (info.count('#')) {
@@ -196,76 +202,92 @@ void MainWindow::onPaste() {
         info = QByteArray::fromBase64(info.toUtf8());
         QRegExp reg("(.+):(.+)@(.+):(\\d+)");
         reg.indexIn(info);
-        config["method"] = reg.cap(1);
-        config["password"] = reg.cap(2);
-        config["server"] = reg.cap(3);
-        config["server_port"] = reg.cap(4).toInt();
+        toAdd.method = reg.cap(1);
+        toAdd.password = reg.cap(2);
+        toAdd.server = reg.cap(3);
+        toAdd.server_port = reg.cap(4).toInt();
     } else
         return;
 
     if (name.startsWith("#"))
         name = name.right(name.size() - 1);
     name = QByteArray::fromPercentEncoding(name.toUtf8());
+    toAdd.remarks = name;
 
-    EditDialog editDialog(name, config, true, this);
-    connect(&editDialog, &EditDialog::submit, ss_configStorage, &SSConfigStorage::add);
-    editDialog.exec();
+    EditDialog editDialog(toAdd, this);
+    if (editDialog.exec() == QDialog::Accepted) {
+        configManager->add(toAdd);
+        configData.append(toAdd);
+        sync();
+    }
 }
 
 void MainWindow::onEdit() {
-    int cr = ui->configTable->currentRow();
-    QString name = ui->configTable->item(cr, 0)->text();
-    if (!ss_processlist->isRunning(name)) {
-        QJsonObject toEdit{*ss_configStorage->cget(name)};
-        EditDialog editDialog(name, toEdit, false, this);
-        connect(&editDialog, &EditDialog::submit, ss_configStorage, &SSConfigStorage::edit);
-        editDialog.exec();
+    int row = ui->configTable->currentRow();
+    Config &toEdit = configData[row];
+    if (!processManager->isRunning(toEdit.id)) {
+        EditDialog editDialog(toEdit, this);
+        if (editDialog.exec() == QDialog::Accepted) {
+            configManager->edit(toEdit);
+            sync();
+        }
     }
 }
 
 void MainWindow::onRemove() {
-    int cr = ui->configTable->currentRow();
-    QString name = ui->configTable->item(cr, 0)->text();
-    if (QMessageBox::question(this,
-                              tr("Confirm removing"),
-                              tr("Are you sure to remove config '%1'?").arg(name),
-                              QMessageBox::StandardButtons(QMessageBox::Yes | QMessageBox::No),
-                              QMessageBox::No
-                             ) == QMessageBox::Yes)
-        ss_configStorage->remove(name);
+    int row = ui->configTable->currentRow();
+    Config &toRemove = configData[row];
+    if (QMessageBox::question(
+                this,
+                tr("Confirm removing"),
+                tr("Are you sure to remove config '%1'?").arg(toRemove.remarks),
+                QMessageBox::StandardButtons(QMessageBox::Yes | QMessageBox::No),
+                QMessageBox::No
+            ) == QMessageBox::Yes) {
+        configManager->remove(toRemove);
+        configData.removeAt(row);
+        sync();
+    }
 }
 
 void MainWindow::onRefresh() {
-    ss_configStorage->refresh();
+    reloadConfig();
 }
 
 void MainWindow::onShare() {
-    int cr = ui->configTable->currentRow();
-    QString name = ui->configTable->item(cr, 0)->text();
-    QJsonObject config{*ss_configStorage->cget(name)};
-    ShareDialog *shareDialog = new ShareDialog{name, config, this};
+    int row = ui->configTable->currentRow();
+    Config &toShare = configData[row];
+    ShareDialog *shareDialog = new ShareDialog{toShare, this};
     shareDialog->show();
 }
 
 void MainWindow::onImport() {
-    ss_configStorage->importGUIConfig(QFileDialog::getOpenFileName(
-                                          this,
-                                          QString(),
-                                          QString(),
-                                          "GUI Config(*.json)"));
+    configManager->importGUIConfig(
+        QFileDialog::getOpenFileName(
+            this,
+            QString(),
+            QString(),
+            "GUI Config(*.json)"
+        )
+    );
+    reloadConfig();
 }
 
 void MainWindow::onExport() {
-    ss_configStorage->exportGUIConfig(QFileDialog::getSaveFileName(
-                                          this,
-                                          QString(),
-                                          "gui-config.json",
-                                          "GUI Config(*.json)"));
+    configManager->exportGUIConfig(
+        QFileDialog::getSaveFileName(
+            this,
+            QString(),
+            "gui-config.json",
+            "GUI Config(*.json)"
+        )
+    );
 }
 
 void MainWindow::onAbout() {
     QString content{tr(
                         "<h1>Shadowsocks Face</h1>"
+                        "<b>Version %1</b>"
                         "<p>A light weight <a href='https://github.com/shadowsocks/shadowsocks-libev'>"
                         "shadowsocks-libev</a> GUI wrapper</p>"
 
@@ -274,32 +296,35 @@ void MainWindow::onAbout() {
                         "Shadowsocks-Qt5</a> project<br/>"
                         "Use <a href='https://github.com/ricmoo/QRCode'>ricmoo/QRCode</a> "
                         "(<a href='https://opensource.org/licenses/MIT'>MIT</a>) to generate QR Code</p>"
-                    )};
+                    ).arg(VERSION)};
     QMessageBox::about(this, tr("About"), content);
 }
 
 void MainWindow::loadAutoConnect() {
     QFile f{QDir{dirPath}.filePath("last_connected.txt")};
+    QSet<int> startIds;
     if (f.open(QIODevice::ReadOnly)) {
         QTextStream in(&f);
         for (;;) {
             QString line = in.readLine();
-            if (line.isNull())
-                break;
-            else if (_start(line))
-                hideFirst = true;
+            if (line.isNull()) break;
+            else startIds.insert(line.toInt());
         }
         f.close();
     }
+    if (startIds.size()) hideFirst = true;
+    for (auto i : configData)
+        if (startIds.contains(i.id))
+            startConfig(i);
 }
 
 void MainWindow::saveAutoConnect() {
     QFile f{QDir{dirPath}.filePath("last_connected.txt")};
     if (f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
         QTextStream out(&f);
-        for (auto i = ss_configStorage->cbegin(); i != ss_configStorage->cend(); ++i)
-            if (ss_processlist->isRunning(i.key()))
-                out << i.key() << "\n";
+        for (const auto &i : configData)
+            if (processManager->isRunning(i.id))
+                out << i.id << "\n";
         f.close();
     }
 }

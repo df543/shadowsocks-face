@@ -2,6 +2,7 @@
 #define EDITDIALOG_H
 
 #include "pch.hpp"
+#include "model/config.h"
 
 namespace Ui {
 class EditDialog;
@@ -9,16 +10,15 @@ class EditDialog;
 
 class EditDialog : public QDialog {
     Q_OBJECT
-public:
-    explicit EditDialog(QString name, QJsonObject config, bool isNew, QWidget *parent = nullptr);
-    ~EditDialog();
 
-signals:
-    void submit(QString new_name, QJsonObject new_config, QString old_name);
+public:
+    // config.id == 0 means new config.
+    explicit EditDialog(Config &config, QWidget *parent = nullptr);
+    ~EditDialog();
 
 private:
     Ui::EditDialog *ui;
-    QString old_name;
+    Config &config;
     void onSave();
 };
 
