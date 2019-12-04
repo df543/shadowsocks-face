@@ -6,17 +6,20 @@
 #include "manager/processmanager.h"
 #include "version.h"
 
-namespace Ui {
+namespace Ui
+{
 class MainWindow;
 }
 
-class MainWindow : public QMainWindow {
+class MainWindow : public QMainWindow
+{
     Q_OBJECT
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    bool isHideFirst() {
+    bool isHideFirst()
+    {
         return hideFirst;
     }
 
@@ -27,7 +30,8 @@ private:
     void setRow(int row, bool bold);
     QSystemTrayIcon systray;
     bool hideFirst = false;
-    bool startConfig(const Config &config);
+    void startConfig(Config &config); // update latency
+    void testLatency(Config &config);
     QList<Config> configData;
 
 private slots:
@@ -48,6 +52,7 @@ private slots:
     void onRemove();
     void onRefresh();
     void onActivate();
+    void onTestLatency();
 
 protected slots:
     void closeEvent(QCloseEvent *e);

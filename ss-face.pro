@@ -8,6 +8,7 @@ CONFIG += c++11
 PRECOMPILED_HEADER = src/pch.hpp
 
 SOURCES += \
+    src/net/latencytester.cpp \
     src/main.cpp \
     src/model/config.cpp \
     src/manager/configmanager.cpp \
@@ -19,6 +20,7 @@ SOURCES += \
     src/qrlib/qrcode.c
 
 HEADERS += \
+    src/net/latencytester.h \
     src/model/config.h \
     src/manager/configmanager.h \
     src/manager/processmanager.h \

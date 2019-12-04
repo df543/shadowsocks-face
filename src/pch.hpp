@@ -37,5 +37,6 @@
 #include <QToolBar>
 #include <QTranslator>
 #include <QUuid>
+#include <QtNetwork>
 
 #endif // PCH_HPP

@@ -3,16 +3,14 @@
 
 #include "qrlib/qreasy.h"
 
-ShareDialog::ShareDialog(const Config &config, QWidget *parent): QDialog(parent), ui(new Ui::ShareDialog) {
+ShareDialog::ShareDialog(const Config &config, QWidget *parent)
+    : QDialog(parent), ui(new Ui::ShareDialog)
+{
     ui->setupUi(this);
     setWindowTitle(tr("Share '%1'").arg(config.remarks));
+    ui->textBrowser->setWordWrapMode(QTextOption::WrapAnywhere);
 
-    QString uriContent = QString("%1:%2@%3:%4")
-                         .arg(config.method)
-                         .arg(config.password)
-                         .arg(config.server)
-                         .arg(config.server_port);
-    QString uri = QString("ss://%1").arg(QString(uriContent.toUtf8().toBase64()).replace("=", ""));
+    QString uri = config.toUri();
     ui->textBrowser->setText(uri);
 
     auto qr = QrEasy::encode(uri.toStdString().data());
@@ -26,6 +24,7 @@ ShareDialog::ShareDialog(const Config &config, QWidget *parent): QDialog(parent)
     ui->imageWidget->setImage(qrImage);
 }
 
-ShareDialog::~ShareDialog() {
+ShareDialog::~ShareDialog()
+{
     delete ui;
 }

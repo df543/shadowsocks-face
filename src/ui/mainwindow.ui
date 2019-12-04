@@ -44,12 +44,12 @@
       </attribute>
       <column>
        <property name="text">
-        <string>Name</string>
+        <string>Server</string>
        </property>
       </column>
       <column>
        <property name="text">
-        <string>Server</string>
+        <string>Latency</string>
        </property>
       </column>
       <column>
@@ -98,6 +98,7 @@
     <addaction name="actionEdit"/>
     <addaction name="actionRemove"/>
     <addaction name="actionShare"/>
+    <addaction name="actionTestLatency"/>
     <addaction name="separator"/>
     <addaction name="actionConnect"/>
     <addaction name="actionDisconnect"/>
@@ -131,6 +132,7 @@
    <addaction name="actionEdit"/>
    <addaction name="actionRemove"/>
    <addaction name="actionShare"/>
+   <addaction name="actionTestLatency"/>
    <addaction name="separator"/>
    <addaction name="actionRefresh"/>
   </widget>
@@ -316,6 +318,18 @@
    </property>
    <property name="toolTip">
     <string>Show window</string>
+   </property>
+  </action>
+  <action name="actionTestLatency">
+   <property name="icon">
+    <iconset resource="../res/res.qrc">
+     <normaloff>:/icons/flag-green</normaloff>:/icons/flag-green</iconset>
+   </property>
+   <property name="text">
+    <string>Test Latency</string>
+   </property>
+   <property name="toolTip">
+    <string>Test Latency</string>
    </property>
   </action>
  </widget>

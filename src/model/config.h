@@ -2,8 +2,10 @@
 #define CONFIG_H
 
 #include "pch.hpp"
+#include "net/latencytester.h"
 
-class Config {
+class Config
+{
 public:
     // data
     int id = 0;
@@ -17,10 +19,13 @@ public:
     QString method;
     bool fastopen = false;
     QString mode = "tcp_only";
+    int latencyMs = NOTEST;
 
     // method
+    QString getName() const;
     QJsonObject toJsonObject() const;
     static Config fromJsonObject(const QJsonObject &json);
+    QString toUri() const;
     QString fileName() const;
 };
 

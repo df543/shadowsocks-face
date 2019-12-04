@@ -4,11 +4,13 @@
 #include "pch.hpp"
 #include "model/config.h"
 
-namespace Ui {
+namespace Ui
+{
 class EditDialog;
 }
 
-class EditDialog : public QDialog {
+class EditDialog : public QDialog
+{
     Q_OBJECT
 
 public:

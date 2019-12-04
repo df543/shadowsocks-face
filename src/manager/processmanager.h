@@ -4,7 +4,8 @@
 #include "pch.hpp"
 #include "model/config.h"
 
-class ProcessManager: public QObject {
+class ProcessManager: public QObject
+{
     Q_OBJECT
 
 public:

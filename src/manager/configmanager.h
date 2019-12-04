@@ -4,7 +4,8 @@
 #include "pch.hpp"
 #include "model/config.h"
 
-class ConfigManager: public QObject {
+class ConfigManager: public QObject
+{
     Q_OBJECT
 
 public:

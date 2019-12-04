@@ -1,9 +1,10 @@
 #ifndef SINGLEINSTANCE_H
 #define SINGLEINSTANCE_H
 
-#include <QObject>
+#include "pch.hpp"
 
-class SingleInstance: public QObject {
+class SingleInstance: public QObject
+{
     Q_OBJECT
 public:
     explicit SingleInstance(QString key, QObject *parent = nullptr): QObject(parent), _key(key) {}

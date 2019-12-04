@@ -1,6 +1,8 @@
 #include "configmanager.h"
 
-ConfigManager::ConfigManager(QString dirPath, QObject *parent): QObject(parent), configDir(dirPath) {
+ConfigManager::ConfigManager(QString dirPath, QObject *parent)
+    : QObject(parent), configDir(dirPath)
+{
     if (!configDir.exists())
         throw std::runtime_error("invalid config dir");
 
@@ -10,7 +12,8 @@ ConfigManager::ConfigManager(QString dirPath, QObject *parent): QObject(parent),
     incCnt++;
 }
 
-void ConfigManager::saveConfig(const Config &config) {
+void ConfigManager::saveConfig(const Config &config)
+{
     QFile jsonFile(configDir.filePath(config.fileName()));
     if (!jsonFile.open(QIODevice::WriteOnly))
         throw std::runtime_error("couldn't write file");
@@ -18,23 +21,27 @@ void ConfigManager::saveConfig(const Config &config) {
     jsonFile.close();
 }
 
-void ConfigManager::add(Config &config) {
+void ConfigManager::add(Config &config)
+{
     configDir.refresh();
     config.id = incCnt++;
     saveConfig(config);
 }
 
-void ConfigManager::remove(const Config &config) {
+void ConfigManager::remove(const Config &config)
+{
     configDir.refresh();
     configDir.remove(config.fileName());
 }
 
-void ConfigManager::edit(const Config &config) {
+void ConfigManager::edit(const Config &config)
+{
     configDir.refresh();
     saveConfig(config);
 }
 
-QList<Config> ConfigManager::query() {
+QList<Config> ConfigManager::query()
+{
     configDir.refresh();
     QList<Config> ret;
     for (auto i : configDir.entryInfoList()) {
@@ -47,7 +54,8 @@ QList<Config> ConfigManager::query() {
     return ret;
 }
 
-void ConfigManager::importGUIConfig(QString guiConfigPath) {
+void ConfigManager::importGUIConfig(QString guiConfigPath)
+{
     QFile f{guiConfigPath};
     f.open(QIODevice::ReadOnly);
     QJsonObject json = QJsonDocument::fromJson(f.readAll()).object();
@@ -60,22 +68,23 @@ void ConfigManager::importGUIConfig(QString guiConfigPath) {
 
     for (auto i : jsonConfigs) {
         Config toAdd = Config::fromJsonObject(i.toObject());
-        toAdd.local_port=localPort;
+        toAdd.local_port = localPort;
         if (shareOverLan)
             toAdd.local_address = "0.0.0.0";
         add(toAdd);
     }
 }
 
-void ConfigManager::exportGUIConfig(QString guiConfigPath) {
+void ConfigManager::exportGUIConfig(QString guiConfigPath)
+{
     QJsonArray jsonConfigs;
-    for (const auto &i:query()) {
+    for (const auto &i : query()) {
         QJsonObject oneConfig;
-        oneConfig["method"]=i.method;
-        oneConfig["password"]=i.password;
-        oneConfig["server"]=i.server;
-        oneConfig["server_port"]=i.server_port;
-        oneConfig["remarks"]=i.remarks;
+        oneConfig["method"] = i.method;
+        oneConfig["password"] = i.password;
+        oneConfig["server"] = i.server;
+        oneConfig["server_port"] = i.server_port;
+        oneConfig["remarks"] = i.remarks;
         jsonConfigs.push_back(oneConfig);
     }
 

@@ -19,5 +19,6 @@
         <file alias="network-disconnect">icons/network-disconnect.png</file>
         <file alias="view-refresh">icons/view-refresh.png</file>
         <file alias="edit-paste">icons/edit-paste.png</file>
+        <file alias="flag-green">icons/flag-green.png</file>
     </qresource>
 </RCC>

@@ -3,12 +3,14 @@
 
 #include "pch.hpp"
 
-class ImageWidget: public QWidget {
+class ImageWidget: public QWidget
+{
     Q_OBJECT
 
 public:
     explicit ImageWidget(QWidget *parent = nullptr): QWidget(parent) {}
-    void setImage(const QImage &image) {
+    void setImage(const QImage &image)
+    {
         _image = image;
     }
 
@@ -16,7 +18,8 @@ private:
     QImage _image;
 
 protected:
-    void paintEvent(QPaintEvent *e) {
+    void paintEvent(QPaintEvent *e)
+    {
         QWidget::paintEvent(e);
         QPainter painter(this);
         QSizeF sz = _image.size().scaled(width(), height(), Qt::KeepAspectRatio);

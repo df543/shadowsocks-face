@@ -4,11 +4,13 @@
 #include "pch.hpp"
 #include "model/config.h"
 
-namespace Ui {
+namespace Ui
+{
 class ShareDialog;
 }
 
-class ShareDialog : public QDialog {
+class ShareDialog : public QDialog
+{
     Q_OBJECT
 
 public:

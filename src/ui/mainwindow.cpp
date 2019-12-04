@@ -5,13 +5,17 @@
 #include "singleinstance.h"
 #include "sharedialog.h"
 
+#include "net/latencytester.h"
+
 #ifdef Q_OS_WIN
 static QString dirPath = QDir::homePath() + "\\AppData\\Local\\ss-face";
 #else
 static QString dirPath = QDir::homePath() + "/.config/ss-face";
 #endif
 
-MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow) {
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent), ui(new Ui::MainWindow)
+{
     SingleInstance *guard = new SingleInstance(QApplication::applicationName(), this);
     if (!guard->runGuard()) {
         std::cout << "Another instance found, program is quiting.\n";
@@ -43,20 +47,21 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     sync();
     checkCurrentRow();
 
-    connect(ui->actionConnect,      &QAction::triggered, this, &MainWindow::onConnect);
-    connect(ui->actionDisconnect,   &QAction::triggered, this, &MainWindow::onDisconnect);
-    connect(ui->actionEdit,         &QAction::triggered, this, &MainWindow::onEdit);
-    connect(ui->actionShare,        &QAction::triggered, this, &MainWindow::onShare);
-    connect(ui->actionImport,       &QAction::triggered, this, &MainWindow::onImport);
-    connect(ui->actionExport,       &QAction::triggered, this, &MainWindow::onExport);
-    connect(ui->actionQuit,         &QAction::triggered, qApp, &QApplication::quit);
-    connect(ui->actionAbout,        &QAction::triggered, this, &MainWindow::onAbout);
-    connect(ui->actionAboutQt,      &QAction::triggered, [this] {QMessageBox::aboutQt(this);});
-    connect(ui->actionManually,     &QAction::triggered, this, &MainWindow::onManually);
-    connect(ui->actionPaste,        &QAction::triggered, this, &MainWindow::onPaste);
-    connect(ui->actionRemove,       &QAction::triggered, this, &MainWindow::onRemove);
-    connect(ui->actionRefresh,      &QAction::triggered, this, &MainWindow::onRefresh);
-    connect(ui->actionShow,         &QAction::triggered, this, &MainWindow::onActivate);
+    connect(ui->actionConnect,          &QAction::triggered, this, &MainWindow::onConnect);
+    connect(ui->actionDisconnect,       &QAction::triggered, this, &MainWindow::onDisconnect);
+    connect(ui->actionEdit,             &QAction::triggered, this, &MainWindow::onEdit);
+    connect(ui->actionShare,            &QAction::triggered, this, &MainWindow::onShare);
+    connect(ui->actionImport,           &QAction::triggered, this, &MainWindow::onImport);
+    connect(ui->actionExport,           &QAction::triggered, this, &MainWindow::onExport);
+    connect(ui->actionQuit,             &QAction::triggered, qApp, &QApplication::quit);
+    connect(ui->actionAbout,            &QAction::triggered, this, &MainWindow::onAbout);
+    connect(ui->actionAboutQt,          &QAction::triggered, [this] {QMessageBox::aboutQt(this);});
+    connect(ui->actionManually,         &QAction::triggered, this, &MainWindow::onManually);
+    connect(ui->actionPaste,            &QAction::triggered, this, &MainWindow::onPaste);
+    connect(ui->actionRemove,           &QAction::triggered, this, &MainWindow::onRemove);
+    connect(ui->actionRefresh,          &QAction::triggered, this, &MainWindow::onRefresh);
+    connect(ui->actionShow,             &QAction::triggered, this, &MainWindow::onActivate);
+    connect(ui->actionTestLatency,      &QAction::triggered, this, &MainWindow::onTestLatency);
 
     connect(ui->configTable, &QTableWidget::itemDoubleClicked, this, &MainWindow::onEdit);
     for (auto i : ui->mainToolBar->actions())
@@ -71,21 +76,56 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     systray.show();
 }
 
-MainWindow::~MainWindow() {
+MainWindow::~MainWindow()
+{
     delete ui;
 }
 
-void MainWindow::onActivate() {
+void MainWindow::onActivate()
+{
     show();
     activateWindow();
 }
 
-void MainWindow::sync() {
+void MainWindow::testLatency(Config &config)
+{
+    if (processManager->isRunning(config.id)) {
+        LatencyTester *tester = new LatencyTester(
+            QNetworkProxy(QNetworkProxy::Socks5Proxy, config.local_address, config.local_port),
+            QUrl("https://google.com"),
+            this
+        );
+        connect(tester, &LatencyTester::testFinished, [&config, this](int latencyMs) {
+            if (processManager->isRunning(config.id)) {
+                config.latencyMs = latencyMs;
+                sync();
+            }
+        });
+        tester->start();
+    }
+}
+
+void MainWindow::onTestLatency()
+{
+    int row = ui->configTable->currentRow();
+    Config &config = configData[row];
+    testLatency(config);
+}
+
+void MainWindow::sync()
+{
     ui->configTable->setRowCount(configData.size());
     for (int i = 0; i < configData.size(); i++) {
         const Config &config = configData[i];
-        ui->configTable->setItem(i, 0, new QTableWidgetItem(config.remarks));
-        ui->configTable->setItem(i, 1, new QTableWidgetItem(config.server + ":" + QString::number(config.server_port)));
+        ui->configTable->setItem(i, 0, new QTableWidgetItem(config.getName()));
+
+        QString latency;
+        if (config.latencyMs == TIMEOUT)
+            latency = tr("timeout");
+        else if (config.latencyMs >= 0)
+            latency = QString("%1 ms").arg(config.latencyMs);
+        ui->configTable->setItem(i, 1, new QTableWidgetItem(latency));
+
         QString local;
         if (config.local_address != "127.0.0.1") local += config.local_address + ":";
         local += QString::number(config.local_port);
@@ -96,19 +136,32 @@ void MainWindow::sync() {
     ui->configTable->clearSelection();
 }
 
-void MainWindow::reloadConfig() {
+void MainWindow::reloadConfig()
+{
+    // save latency
+    QHash<int, int> latency;
+    for (const auto &i : configData)
+        latency[i.id] = i.latencyMs;
+    // reload
     configData = configManager->query();
+    // restore latency
+    for (auto &i : configData)
+        if (latency.count(i.id))
+            i.latencyMs = latency[i.id];
+    // refresh view
     sync();
 }
 
-void MainWindow::setRow(int row, bool bold) {
+void MainWindow::setRow(int row, bool bold)
+{
     QFont font;
     font.setBold(bold);
     for (int i = 0; i < 3; i++)
         ui->configTable->item(row, i)->setFont(font);
 }
 
-void MainWindow::checkCurrentRow() {
+void MainWindow::checkCurrentRow()
+{
     if (ui->configTable->selectedRanges().size()) {
         int row = ui->configTable->currentRow();
         int id = configData[row].id;
@@ -118,53 +171,77 @@ void MainWindow::checkCurrentRow() {
         ui->actionEdit->setEnabled(!connected);
         ui->actionRemove->setEnabled(!connected);
         ui->actionShare->setEnabled(true);
+        ui->actionTestLatency->setEnabled(connected);
     } else {
         ui->actionConnect->setEnabled(false);
         ui->actionDisconnect->setEnabled(false);
         ui->actionEdit->setEnabled(false);
         ui->actionRemove->setEnabled(false);
         ui->actionShare->setEnabled(false);
+        ui->actionTestLatency->setEnabled(false);
     }
 }
 
-bool MainWindow::startConfig(const Config &config) {
+void MainWindow::startConfig(Config &config)
+{
     auto p = processManager->start(config.id);
     if (p) {
         connect(p, &QProcess::readyReadStandardOutput, [this, config, p] {
             ui->logArea->append(
-                "<b>" + config.remarks + "</b><br/>"
+                "<b>" + config.getName() + "</b><br/>"
                 "<span style='color:DimGray'>" + QString(p->readAllStandardOutput()).replace("\n", "<br/>") + "</span>"
             );
         });
         connect(p, &QProcess::readyReadStandardError, [this, config, p] {
             ui->logArea->append(
-                "<b>" + config.remarks + "</b><br/>"
+                "<b>" + config.getName() + "</b><br/>"
                 "<span style='color:BlueViolet'>" + QString(p->readAllStandardError()).replace("\n", "<br/>") + "</span>"
             );
         });
-        return true;
     } else {
         ui->logArea->append(
-            "<b>" + config.remarks + "</b><br />"
+            "<b>" + config.getName() + "</b><br />"
             "<span style='color:Red'>Failed to start</span>"
         );
-        return false;
     }
+
+    QTimer::singleShot(100, [&config, this] {
+        testLatency(config);
+    });
 }
 
-void MainWindow::onConnect() {
+void MainWindow::onConnect()
+{
     int row = ui->configTable->currentRow();
-    if (!startConfig(configData[row]))
-        sync();
+    Config &toConnect = configData[row];
+
+    // check port use
+    for (const auto &i : configData)
+        if (i.id != toConnect.id && i.local_port == toConnect.local_port && processManager->isRunning(i.id)) {
+            if (QMessageBox::question(
+                    this,
+                    tr("Port repeat"),
+                    tr("Port %1 already used by config '%2', kill it?").arg(i.local_port).arg(i.getName()),
+                    QMessageBox::StandardButtons(QMessageBox::Yes | QMessageBox::No),
+                    QMessageBox::Yes
+                ) == QMessageBox::Yes) {
+                processManager->terminate(i.id);
+                break;
+            } else return;
+        }
+
+    startConfig(toConnect);
 }
 
-void MainWindow::onDisconnect() {
+void MainWindow::onDisconnect()
+{
     int row = ui->configTable->currentRow();
     int id = configData[row].id;
     processManager->terminate(id);
 }
 
-void MainWindow::onManually() {
+void MainWindow::onManually()
+{
     Config toAdd;
     EditDialog editDialog(toAdd, this);
     if (editDialog.exec() == QDialog::Accepted) {
@@ -174,7 +251,8 @@ void MainWindow::onManually() {
     }
 }
 
-void MainWindow::onPaste() {
+void MainWindow::onPaste()
+{
     QClipboard *clipboard = QGuiApplication::clipboard();
     QString s = clipboard->text();
     s = s.trimmed().replace("/?#", "#");
@@ -222,7 +300,8 @@ void MainWindow::onPaste() {
     }
 }
 
-void MainWindow::onEdit() {
+void MainWindow::onEdit()
+{
     int row = ui->configTable->currentRow();
     Config &toEdit = configData[row];
     if (!processManager->isRunning(toEdit.id)) {
@@ -234,34 +313,38 @@ void MainWindow::onEdit() {
     }
 }
 
-void MainWindow::onRemove() {
+void MainWindow::onRemove()
+{
     int row = ui->configTable->currentRow();
     Config &toRemove = configData[row];
     if (QMessageBox::question(
-                this,
-                tr("Confirm removing"),
-                tr("Are you sure to remove config '%1'?").arg(toRemove.remarks),
-                QMessageBox::StandardButtons(QMessageBox::Yes | QMessageBox::No),
-                QMessageBox::No
-            ) == QMessageBox::Yes) {
+            this,
+            tr("Confirm removing"),
+            tr("Are you sure to remove config '%1'?").arg(toRemove.getName()),
+            QMessageBox::StandardButtons(QMessageBox::Yes | QMessageBox::No),
+            QMessageBox::No
+        ) == QMessageBox::Yes) {
         configManager->remove(toRemove);
         configData.removeAt(row);
         sync();
     }
 }
 
-void MainWindow::onRefresh() {
+void MainWindow::onRefresh()
+{
     reloadConfig();
 }
 
-void MainWindow::onShare() {
+void MainWindow::onShare()
+{
     int row = ui->configTable->currentRow();
     Config &toShare = configData[row];
     ShareDialog *shareDialog = new ShareDialog{toShare, this};
     shareDialog->show();
 }
 
-void MainWindow::onImport() {
+void MainWindow::onImport()
+{
     configManager->importGUIConfig(
         QFileDialog::getOpenFileName(
             this,
@@ -273,7 +356,8 @@ void MainWindow::onImport() {
     reloadConfig();
 }
 
-void MainWindow::onExport() {
+void MainWindow::onExport()
+{
     configManager->exportGUIConfig(
         QFileDialog::getSaveFileName(
             this,
@@ -284,7 +368,8 @@ void MainWindow::onExport() {
     );
 }
 
-void MainWindow::onAbout() {
+void MainWindow::onAbout()
+{
     QString content{tr(
                         "<h1>Shadowsocks Face</h1>"
                         "<b>Version %1</b>"
@@ -300,7 +385,8 @@ void MainWindow::onAbout() {
     QMessageBox::about(this, tr("About"), content);
 }
 
-void MainWindow::loadAutoConnect() {
+void MainWindow::loadAutoConnect()
+{
     QFile f{QDir{dirPath}.filePath("last_connected.txt")};
     QSet<int> startIds;
     if (f.open(QIODevice::ReadOnly)) {
@@ -313,12 +399,13 @@ void MainWindow::loadAutoConnect() {
         f.close();
     }
     if (startIds.size()) hideFirst = true;
-    for (auto i : configData)
+    for (auto &i : configData)
         if (startIds.contains(i.id))
             startConfig(i);
 }
 
-void MainWindow::saveAutoConnect() {
+void MainWindow::saveAutoConnect()
+{
     QFile f{QDir{dirPath}.filePath("last_connected.txt")};
     if (f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
         QTextStream out(&f);
@@ -329,7 +416,8 @@ void MainWindow::saveAutoConnect() {
     }
 }
 
-void MainWindow::closeEvent(QCloseEvent *e) {
+void MainWindow::closeEvent(QCloseEvent *e)
+{
     if (e->spontaneous()) {
         e->ignore();
         hide();
