@@ -10,12 +10,9 @@
     <height>550</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>Shadowsocks Face</string>
-  </property>
   <property name="windowIcon">
-   <iconset resource="../res/res.qrc">
-    <normaloff>:/prog-icon/icon</normaloff>:/prog-icon/icon</iconset>
+   <iconset resource="../../res/res.qrc">
+    <normaloff>:/icon/this</normaloff>:/icon/this</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -67,7 +64,7 @@
      <x>0</x>
      <y>0</y>
      <width>700</width>
-     <height>36</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -88,7 +85,7 @@
       <string>&amp;Add</string>
      </property>
      <property name="icon">
-      <iconset resource="../res/res.qrc">
+      <iconset resource="../../res/res.qrc">
        <normaloff>:/icons/list-add</normaloff>:/icons/list-add</iconset>
      </property>
      <addaction name="actionManually"/>
@@ -153,7 +150,7 @@
   </widget>
   <action name="actionConnect">
    <property name="icon">
-    <iconset resource="../res/res.qrc">
+    <iconset resource="../../res/res.qrc">
      <normaloff>:/icons/network-connect</normaloff>:/icons/network-connect</iconset>
    </property>
    <property name="text">
@@ -165,7 +162,7 @@
   </action>
   <action name="actionDisconnect">
    <property name="icon">
-    <iconset resource="../res/res.qrc">
+    <iconset resource="../../res/res.qrc">
      <normaloff>:/icons/network-disconnect</normaloff>:/icons/network-disconnect</iconset>
    </property>
    <property name="text">
@@ -177,7 +174,7 @@
   </action>
   <action name="actionEdit">
    <property name="icon">
-    <iconset resource="../res/res.qrc">
+    <iconset resource="../../res/res.qrc">
      <normaloff>:/icons/document-edit</normaloff>:/icons/document-edit</iconset>
    </property>
    <property name="text">
@@ -189,7 +186,7 @@
   </action>
   <action name="actionShare">
    <property name="icon">
-    <iconset resource="../res/res.qrc">
+    <iconset resource="../../res/res.qrc">
      <normaloff>:/icons/document-share</normaloff>:/icons/document-share</iconset>
    </property>
    <property name="text">
@@ -201,7 +198,7 @@
   </action>
   <action name="actionImport">
    <property name="icon">
-    <iconset resource="../res/res.qrc">
+    <iconset resource="../../res/res.qrc">
      <normaloff>:/icons/document-import</normaloff>:/icons/document-import</iconset>
    </property>
    <property name="text">
@@ -213,7 +210,7 @@
   </action>
   <action name="actionExport">
    <property name="icon">
-    <iconset resource="../res/res.qrc">
+    <iconset resource="../../res/res.qrc">
      <normaloff>:/icons/document-export</normaloff>:/icons/document-export</iconset>
    </property>
    <property name="text">
@@ -225,7 +222,7 @@
   </action>
   <action name="actionQuit">
    <property name="icon">
-    <iconset resource="../res/res.qrc">
+    <iconset resource="../../res/res.qrc">
      <normaloff>:/icons/application-exit</normaloff>:/icons/application-exit</iconset>
    </property>
    <property name="text">
@@ -237,7 +234,7 @@
   </action>
   <action name="actionAbout">
    <property name="icon">
-    <iconset resource="../res/res.qrc">
+    <iconset resource="../../res/res.qrc">
      <normaloff>:/icons/help-about</normaloff>:/icons/help-about</iconset>
    </property>
    <property name="text">
@@ -257,7 +254,7 @@
   </action>
   <action name="actionManually">
    <property name="icon">
-    <iconset resource="../res/res.qrc">
+    <iconset resource="../../res/res.qrc">
      <normaloff>:/icons/edit-guides</normaloff>:/icons/edit-guides</iconset>
    </property>
    <property name="text">
@@ -269,7 +266,7 @@
   </action>
   <action name="actionRemove">
    <property name="icon">
-    <iconset resource="../res/res.qrc">
+    <iconset resource="../../res/res.qrc">
      <normaloff>:/icons/list-remove</normaloff>:/icons/list-remove</iconset>
    </property>
    <property name="text">
@@ -284,7 +281,7 @@
   </action>
   <action name="actionRefresh">
    <property name="icon">
-    <iconset resource="../res/res.qrc">
+    <iconset resource="../../res/res.qrc">
      <normaloff>:/icons/view-refresh</normaloff>:/icons/view-refresh</iconset>
    </property>
    <property name="text">
@@ -299,7 +296,7 @@
   </action>
   <action name="actionPaste">
    <property name="icon">
-    <iconset resource="../res/res.qrc">
+    <iconset resource="../../res/res.qrc">
      <normaloff>:/icons/edit-paste</normaloff>:/icons/edit-paste</iconset>
    </property>
    <property name="text">
@@ -322,7 +319,7 @@
   </action>
   <action name="actionTestLatency">
    <property name="icon">
-    <iconset resource="../res/res.qrc">
+    <iconset resource="../../res/res.qrc">
      <normaloff>:/icons/flag-green</normaloff>:/icons/flag-green</iconset>
    </property>
    <property name="text">
@@ -335,7 +332,7 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="../res/res.qrc"/>
+  <include location="../../res/res.qrc"/>
  </resources>
  <connections/>
 </ui>

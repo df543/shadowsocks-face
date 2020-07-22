@@ -2,10 +2,10 @@
 #include "ui_mainwindow.h"
 
 #include "editdialog.h"
-#include "singleinstance.h"
 #include "sharedialog.h"
-
-#include "net/latencytester.h"
+#include "app/global.h"
+#include "tools/singleinstance.h"
+#include "tools/latencytester.h"
 
 #ifdef Q_OS_WIN
 static QString dirPath = QDir::homePath() + "\\AppData\\Local\\ss-face";
@@ -32,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
     }
 
     ui->setupUi(this);
+    setWindowTitle(QString::fromStdString(global::about::name));
     ui->configTable->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     connect(ui->configTable, &QTableWidget::itemSelectionChanged, this, &MainWindow::checkCurrentRow);
 
@@ -67,7 +68,7 @@ MainWindow::MainWindow(QWidget *parent)
     for (auto i : ui->mainToolBar->actions())
         ui->configTable->addAction(i);
 
-    systray.setIcon(QIcon(":/prog-icon/icon"));
+    systray.setIcon(QIcon(":/icon/this"));
     QMenu *systrayMenu = new QMenu(this);
     systrayMenu->addAction(ui->actionShow);
     systrayMenu->addAction(ui->actionQuit);
@@ -188,14 +189,14 @@ void MainWindow::startConfig(Config &config)
     if (p) {
         connect(p, &QProcess::readyReadStandardOutput, [this, config, p] {
             ui->logArea->append(
-                "<b>" + config.getName() + "</b><br/>"
-                "<span style='color:DimGray'>" + QString(p->readAllStandardOutput()).replace("\n", "<br/>") + "</span>"
+                "<b>" + config.getName() + "</b><br>"
+                "<span style='color:DimGray'>" + QString(p->readAllStandardOutput()).replace("\n", "<br>") + "</span>"
             );
         });
         connect(p, &QProcess::readyReadStandardError, [this, config, p] {
             ui->logArea->append(
-                "<b>" + config.getName() + "</b><br/>"
-                "<span style='color:BlueViolet'>" + QString(p->readAllStandardError()).replace("\n", "<br/>") + "</span>"
+                "<b>" + config.getName() + "</b><br>"
+                "<span style='color:BlueViolet'>" + QString(p->readAllStandardError()).replace("\n", "<br>") + "</span>"
             );
         });
     } else {
@@ -371,17 +372,24 @@ void MainWindow::onExport()
 void MainWindow::onAbout()
 {
     QString content{tr(
-                        "<h1>Shadowsocks Face</h1>"
-                        "<b>Version %1</b>"
-                        "<p>A light weight <a href='https://github.com/shadowsocks/shadowsocks-libev'>"
-                        "shadowsocks-libev</a> GUI wrapper</p>"
+                        "<h1>%1</h1>"
 
-                        "<p>License: <a href='http://www.gnu.org/licenses/gpl.html'>GPL-3.0</a><br/>"
-                        "Special thanks to <a href='https://github.com/shadowsocks/shadowsocks-qt5'>"
-                        "Shadowsocks-Qt5</a> project<br/>"
-                        "Use <a href='https://github.com/ricmoo/QRCode'>ricmoo/QRCode</a> "
-                        "(<a href='https://opensource.org/licenses/MIT'>MIT</a>) to generate QR Code</p>"
-                    ).arg(VERSION)};
+                        "<p><i>%2</i> is a <a href='https://github.com/shadowsocks/shadowsocks-libev'>shadowsocks-libev</a> client wrapper using qt5.</p>"
+
+                        "<p>"
+                        "Special thanks to <a href='https://github.com/shadowsocks/shadowsocks-qt5'>Shadowsocks-Qt5</a> project;<br>"
+                        "Use <a href='https://github.com/ricmoo/QRCode'>ricmoo/QRCode</a> (<a href='https://opensource.org/licenses/MIT'>MIT</a>) to generate QR Code."
+                        "</p>"
+
+                        "<hr>"
+                        "Version: %3<br>"
+                        "License: <a href='https://www.gnu.org/licenses/gpl.html'>GPL-3.0</a><br>"
+                        "Project Home: <a href='https://github.com/df543/shadowsocks-qtwrapper'>df543/shadowsocks-qtwrapper</a>"
+                    ).arg(
+                        QString::fromStdString(global::about::name),
+                        QString::fromStdString(global::about::abbr),
+                        QString::fromStdString(global::about::version)
+                    )};
     QMessageBox::about(this, tr("About"), content);
 }
 

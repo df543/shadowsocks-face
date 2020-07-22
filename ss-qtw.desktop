@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Shadowsocks Qt Wrapper
+Exec=ss-qtw
+Icon=ss-qtw
+Terminal=false
+Type=Application
+Categories=Network;
+StartupNotify=true

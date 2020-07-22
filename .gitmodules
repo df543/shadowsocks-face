@@ -1,0 +1,3 @@
+[submodule "src/third_party/qrcode"]
+	path = src/third_party/qrcode
+	url = https://github.com/ricmoo/QRCode.git

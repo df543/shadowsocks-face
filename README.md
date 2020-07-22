@@ -14,7 +14,7 @@ sudo dnf install qt5-devel      # Fedora
 Then clone and build project:
 
 ```sh
-git clone https://github.com/df543/Shadowsocks-Face.git
+git clone --recursive https://github.com/df543/Shadowsocks-Face.git
 cd Shadowsocks-Face; mkdir build; cd build
 qmake-qt5 .. || qmake ..
 make

@@ -1,7 +1,7 @@
 #ifndef SSCONFIGSTORAGE_H
 #define SSCONFIGSTORAGE_H
 
-#include "pch.hpp"
+#include "common.hpp"
 #include "model/config.h"
 
 class ConfigManager: public QObject

@@ -9,6 +9,9 @@
 #include <iostream>
 #include <exception>
 #include <stdexcept>
+#include <string>
+#include <vector>
+#include <algorithm>
 
 // qt
 #include <QAction>
@@ -18,6 +21,7 @@
 #include <QCloseEvent>
 #include <QDateTime>
 #include <QFileDialog>
+#include <QtGlobal>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>

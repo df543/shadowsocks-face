@@ -1,8 +1,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include "pch.hpp"
-#include "net/latencytester.h"
+#include "common.hpp"
+#include "tools/latencytester.h"
 
 class Config
 {

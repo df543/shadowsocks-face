@@ -1,7 +1,7 @@
 #include "sharedialog.h"
 #include "ui_sharedialog.h"
 
-#include "qrlib/qreasy.h"
+#include "tools/qreasy.h"
 
 ShareDialog::ShareDialog(const Config &config, QWidget *parent)
     : QDialog(parent), ui(new Ui::ShareDialog)
@@ -13,14 +13,12 @@ ShareDialog::ShareDialog(const Config &config, QWidget *parent)
     QString uri = config.toUri();
     ui->textBrowser->setText(uri);
 
-    auto qr = QrEasy::encode(uri.toStdString().data());
-    int size = 512;
+    auto qr = QrEasy(uri.toStdString());
+    int size = qr.size();
     QImage qrImage(size, size, QImage::Format_Mono);
-    qrImage.fill(1);
-    auto scale = double(size) / qr.size();
     for (int i = 0; i < size; i++)
         for (int j = 0; j < size; j++)
-            qrImage.setPixel(i, j, !qr.at(i / scale, j / scale));
+            qrImage.setPixel(i, j, !qr.at(i, j));
     ui->imageWidget->setImage(qrImage);
 }
 

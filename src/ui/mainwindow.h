@@ -1,10 +1,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "pch.hpp"
-#include "manager/configmanager.h"
-#include "manager/processmanager.h"
-#include "version.h"
+#include "common.hpp"
+#include "data/configmanager.h"
+#include "sspm/processmanager.h"
+#include "app/global.h"
 
 namespace Ui
 {

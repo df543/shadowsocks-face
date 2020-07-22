@@ -1,6 +1,6 @@
 <RCC>
-    <qresource prefix="/prog-icon">
-        <file alias="icon">ss-face.png</file>
+    <qresource prefix="/icon">
+        <file alias="this">../ss-qtw.png</file>
     </qresource>
     <qresource prefix="/translations">
         <file alias="zh_CN">translations/zh_CN.qm</file>

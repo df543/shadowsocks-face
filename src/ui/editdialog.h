@@ -1,7 +1,7 @@
 #ifndef EDITDIALOG_H
 #define EDITDIALOG_H
 
-#include "pch.hpp"
+#include "common.hpp"
 #include "model/config.h"
 
 namespace Ui
