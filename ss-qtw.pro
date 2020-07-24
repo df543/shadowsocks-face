@@ -15,8 +15,8 @@ SOURCES += \
     src/sspm/processmanager.cpp \
     src/third_party/qrcode/src/qrcode.c \
     src/tools/latencytester.cpp \
+    src/tools/onceguard.cpp \
     src/tools/qreasy.cpp \
-    src/tools/singleinstance.cpp \
     src/ui/editdialog.cpp \
     src/ui/mainwindow.cpp \
     src/ui/sharedialog.cpp
@@ -28,9 +28,9 @@ HEADERS += \
     src/app/version.h \
     src/sspm/processmanager.h \
     src/third_party/qrcode/src/qrcode.h \
+    src/tools/onceguard.h \
     src/tools/qreasy.h \
     src/tools/latencytester.h \
-    src/tools/singleinstance.h \
     src/ui/editdialog.h \
     src/ui/custom/imagewidget.h \
     src/ui/mainwindow.h \

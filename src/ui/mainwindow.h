@@ -23,6 +23,9 @@ public:
         return hideFirst;
     }
 
+public slots:
+    void focus();
+
 private:
     Ui::MainWindow *ui;
     ConfigManager *configManager;
@@ -51,7 +54,6 @@ private slots:
     void onPaste();
     void onRemove();
     void onRefresh();
-    void onActivate();
     void onTestLatency();
 
 protected slots:

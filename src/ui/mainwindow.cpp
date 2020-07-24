@@ -4,7 +4,6 @@
 #include "editdialog.h"
 #include "sharedialog.h"
 #include "app/global.h"
-#include "tools/singleinstance.h"
 #include "tools/latencytester.h"
 
 #ifdef Q_OS_WIN
@@ -16,13 +15,6 @@ static QString dirPath = QDir::homePath() + "/.config/ss-face";
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
-    SingleInstance *guard = new SingleInstance(QApplication::applicationName(), this);
-    if (!guard->runGuard()) {
-        std::cout << "Another instance found, program is quiting.\n";
-        exit(0);
-    }
-    connect(guard, &SingleInstance::newInstance, this, &MainWindow::onActivate);
-
     QProcess testStart(this);
     testStart.start("ss-local");
     testStart.waitForFinished();
@@ -61,7 +53,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionPaste,            &QAction::triggered, this, &MainWindow::onPaste);
     connect(ui->actionRemove,           &QAction::triggered, this, &MainWindow::onRemove);
     connect(ui->actionRefresh,          &QAction::triggered, this, &MainWindow::onRefresh);
-    connect(ui->actionShow,             &QAction::triggered, this, &MainWindow::onActivate);
+    connect(ui->actionShow,             &QAction::triggered, this, &MainWindow::focus);
     connect(ui->actionTestLatency,      &QAction::triggered, this, &MainWindow::onTestLatency);
 
     connect(ui->configTable, &QTableWidget::itemDoubleClicked, this, &MainWindow::onEdit);
@@ -73,7 +65,7 @@ MainWindow::MainWindow(QWidget *parent)
     systrayMenu->addAction(ui->actionShow);
     systrayMenu->addAction(ui->actionQuit);
     systray.setContextMenu(systrayMenu);
-    connect(&systray, &QSystemTrayIcon::activated, this, &MainWindow::onActivate);
+    connect(&systray, &QSystemTrayIcon::activated, this, &MainWindow::focus);
     systray.show();
 }
 
@@ -82,7 +74,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::onActivate()
+void MainWindow::focus()
 {
     show();
     activateWindow();
