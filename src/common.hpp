@@ -33,6 +33,7 @@
 #include <QPainter>
 #include <QProcess>
 #include <QRegExpValidator>
+#include <QStandardPaths>
 #include <QStatusBar>
 #include <QSystemTrayIcon>
 #include <QTableWidget>

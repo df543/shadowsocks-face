@@ -6,14 +6,9 @@
 #include "app/global.h"
 #include "tools/latencytester.h"
 
-#ifdef Q_OS_WIN
-static QString dirPath = QDir::homePath() + "\\AppData\\Local\\ss-face";
-#else
-static QString dirPath = QDir::homePath() + "/.config/ss-face";
-#endif
-
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow)
+    : QMainWindow(parent), ui(new Ui::MainWindow),
+      dirPath(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation))
 {
     QProcess testStart(this);
     testStart.start("ss-local");
@@ -378,9 +373,9 @@ void MainWindow::onAbout()
                         "License: <a href='https://www.gnu.org/licenses/gpl.html'>GPL-3.0</a><br>"
                         "Project Home: <a href='https://github.com/df543/shadowsocks-qtwrapper'>df543/shadowsocks-qtwrapper</a>"
                     ).arg(
-                        QString::fromStdString(global::about::name),
-                        QString::fromStdString(global::about::abbr),
-                        QString::fromStdString(global::about::version)
+                        qApp->applicationDisplayName(),
+                        qApp->applicationName(),
+                        qApp->applicationVersion()
                     )};
     QMessageBox::about(this, tr("About"), content);
 }

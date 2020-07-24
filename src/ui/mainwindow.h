@@ -36,6 +36,7 @@ private:
     void startConfig(Config &config); // update latency
     void testLatency(Config &config);
     QList<Config> configData;
+    QString dirPath;
 
 private slots:
     void sync();
