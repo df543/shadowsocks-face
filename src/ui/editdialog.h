@@ -2,7 +2,7 @@
 #define EDITDIALOG_H
 
 #include "common.hpp"
-#include "model/config.h"
+#include "model/ssconfig.h"
 
 namespace Ui
 {
@@ -15,12 +15,12 @@ class EditDialog : public QDialog
 
 public:
     // config.id == 0 means new config.
-    explicit EditDialog(Config &config, QWidget *parent = nullptr);
+    explicit EditDialog(SsConfig &config, QWidget *parent = nullptr);
     ~EditDialog();
 
 private:
     Ui::EditDialog *ui;
-    Config &config;
+    SsConfig &config;
     void onSave();
 };
 

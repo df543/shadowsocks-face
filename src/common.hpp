@@ -13,35 +13,43 @@
 #include <vector>
 #include <algorithm>
 
-// qt
-#include <QAction>
-#include <QApplication>
+// qt core
+#include <QByteArray>
 #include <QChar>
-#include <QClipboard>
-#include <QCloseEvent>
 #include <QDateTime>
-#include <QFileDialog>
 #include <QtGlobal>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonParseError>
 #include <QJsonValue>
+#include <QProcess>
+#include <QStandardPaths>
+#include <QTemporaryFile>
+#include <QTextStream>
+#include <QTranslator>
+#include <QUuid>
+
+// qt gui
+#include <QClipboard>
+#include <QCloseEvent>
+#include <QPainter>
+#include <QRegExpValidator>
+
+// qt widgets
+#include <QAction>
+#include <QApplication>
+#include <QFileDialog>
 #include <QMainWindow>
 #include <QMenuBar>
 #include <QMessageBox>
-#include <QPainter>
-#include <QProcess>
-#include <QRegExpValidator>
-#include <QStandardPaths>
 #include <QStatusBar>
 #include <QSystemTrayIcon>
 #include <QTableWidget>
 #include <QTextEdit>
-#include <QTextStream>
 #include <QToolBar>
-#include <QTranslator>
-#include <QUuid>
+
+// qt network
 #include <QtNetwork>
 
 #endif // PCH_HPP

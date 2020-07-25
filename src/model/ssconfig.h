@@ -1,10 +1,10 @@
-#ifndef CONFIG_H
-#define CONFIG_H
+#ifndef SSCONFIG_H
+#define SSCONFIG_H
 
 #include "common.hpp"
 #include "tools/latencytester.h"
 
-class Config
+class SsConfig
 {
 public:
     // data
@@ -24,9 +24,9 @@ public:
     // method
     QString getName() const;
     QJsonObject toJsonObject() const;
-    static Config fromJsonObject(const QJsonObject &json);
+    static SsConfig fromJsonObject(const QJsonObject &json);
     QString toUri() const;
     QString fileName() const;
 };
 
-#endif // CONFIG_H
+#endif // SSCONFIG_H

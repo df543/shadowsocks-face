@@ -33,9 +33,9 @@ private:
     void setRow(int row, bool bold);
     QSystemTrayIcon systray;
     bool hideFirst = false;
-    void startConfig(Config &config); // update latency
-    void testLatency(Config &config);
-    QList<Config> configData;
+    void startConfig(SsConfig &config); // update latency
+    void testLatency(SsConfig &config);
+    QList<SsConfig> configData;
     QString dirPath;
 
 private slots:

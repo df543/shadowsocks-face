@@ -1,7 +1,7 @@
 #include "editdialog.h"
 #include "ui_editdialog.h"
 
-EditDialog::EditDialog(Config &config, QWidget *parent)
+EditDialog::EditDialog(SsConfig &config, QWidget *parent)
     : QDialog(parent), ui(new Ui::EditDialog), config(config)
 {
     ui->setupUi(this);

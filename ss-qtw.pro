@@ -9,10 +9,11 @@ PRECOMPILED_HEADER = src/common.hpp
 
 SOURCES += \
     src/data/configmanager.cpp \
-    src/model/config.cpp \
     src/app/global.cpp \
     src/app/main.cpp \
+    src/model/ssconfig.cpp \
     src/sspm/processmanager.cpp \
+    src/sspm/sspm.cpp \
     src/third_party/qrcode/src/qrcode.c \
     src/tools/latencytester.cpp \
     src/tools/onceguard.cpp \
@@ -23,10 +24,11 @@ SOURCES += \
 
 HEADERS += \
     src/data/configmanager.h \
-    src/model/config.h \
     src/app/global.h \
     src/app/version.h \
+    src/model/ssconfig.h \
     src/sspm/processmanager.h \
+    src/sspm/sspm.h \
     src/third_party/qrcode/src/qrcode.h \
     src/tools/onceguard.h \
     src/tools/qreasy.h \

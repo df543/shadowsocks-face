@@ -2,6 +2,7 @@
 #define GLOBAL_H
 
 #include "common.hpp"
+#include "sspm/sspm.h"
 
 namespace global
 {
@@ -13,7 +14,7 @@ extern const std::string abbr;
 extern const std::string version;
 }
 
-
+extern Sspm* sspm;
 
 }
 

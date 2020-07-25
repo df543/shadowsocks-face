@@ -12,7 +12,7 @@ ConfigManager::ConfigManager(QString dirPath, QObject *parent)
     incCnt++;
 }
 
-void ConfigManager::saveConfig(const Config &config)
+void ConfigManager::saveConfig(const SsConfig &config)
 {
     QFile jsonFile(configDir.filePath(config.fileName()));
     if (!jsonFile.open(QIODevice::WriteOnly))
@@ -21,34 +21,34 @@ void ConfigManager::saveConfig(const Config &config)
     jsonFile.close();
 }
 
-void ConfigManager::add(Config &config)
+void ConfigManager::add(SsConfig &config)
 {
     configDir.refresh();
     config.id = incCnt++;
     saveConfig(config);
 }
 
-void ConfigManager::remove(const Config &config)
+void ConfigManager::remove(const SsConfig &config)
 {
     configDir.refresh();
     configDir.remove(config.fileName());
 }
 
-void ConfigManager::edit(const Config &config)
+void ConfigManager::edit(const SsConfig &config)
 {
     configDir.refresh();
     saveConfig(config);
 }
 
-QList<Config> ConfigManager::query()
+QList<SsConfig> ConfigManager::query()
 {
     configDir.refresh();
-    QList<Config> ret;
+    QList<SsConfig> ret;
     for (auto i : configDir.entryInfoList()) {
         QFile jsonFile(i.filePath());
         if (!jsonFile.open(QIODevice::ReadOnly))
             throw std::runtime_error("couldn't open config file");
-        ret.append(Config::fromJsonObject(QJsonDocument::fromJson(jsonFile.readAll()).object()));
+        ret.append(SsConfig::fromJsonObject(QJsonDocument::fromJson(jsonFile.readAll()).object()));
         jsonFile.close();
     }
     return ret;
@@ -67,7 +67,7 @@ void ConfigManager::importGUIConfig(QString guiConfigPath)
     QJsonArray jsonConfigs = json.find("configs")->toArray();
 
     for (auto i : jsonConfigs) {
-        Config toAdd = Config::fromJsonObject(i.toObject());
+        SsConfig toAdd = SsConfig::fromJsonObject(i.toObject());
         toAdd.local_port = localPort;
         if (shareOverLan)
             toAdd.local_address = "0.0.0.0";

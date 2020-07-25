@@ -10,10 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow),
       dirPath(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation))
 {
-    QProcess testStart(this);
-    testStart.start("ss-local");
-    testStart.waitForFinished();
-    if (testStart.error() == QProcess::FailedToStart) {
+    if (!global::sspm->test()) {
         QMessageBox::critical(this, tr("Start Error"), tr("Failed to start ss-local process. Please check shadowsocks-libev installation."));
         exit(1);
     }
@@ -75,7 +72,7 @@ void MainWindow::focus()
     activateWindow();
 }
 
-void MainWindow::testLatency(Config &config)
+void MainWindow::testLatency(SsConfig &config)
 {
     if (processManager->isRunning(config.id)) {
         LatencyTester *tester = new LatencyTester(
@@ -96,7 +93,7 @@ void MainWindow::testLatency(Config &config)
 void MainWindow::onTestLatency()
 {
     int row = ui->configTable->currentRow();
-    Config &config = configData[row];
+    SsConfig &config = configData[row];
     testLatency(config);
 }
 
@@ -104,7 +101,7 @@ void MainWindow::sync()
 {
     ui->configTable->setRowCount(configData.size());
     for (int i = 0; i < configData.size(); i++) {
-        const Config &config = configData[i];
+        const SsConfig &config = configData[i];
         ui->configTable->setItem(i, 0, new QTableWidgetItem(config.getName()));
 
         QString latency;
@@ -170,7 +167,7 @@ void MainWindow::checkCurrentRow()
     }
 }
 
-void MainWindow::startConfig(Config &config)
+void MainWindow::startConfig(SsConfig &config)
 {
     auto p = processManager->start(config.id);
     if (p) {
@@ -201,7 +198,7 @@ void MainWindow::startConfig(Config &config)
 void MainWindow::onConnect()
 {
     int row = ui->configTable->currentRow();
-    Config &toConnect = configData[row];
+    SsConfig &toConnect = configData[row];
 
     // check port use
     for (const auto &i : configData)
@@ -230,7 +227,7 @@ void MainWindow::onDisconnect()
 
 void MainWindow::onManually()
 {
-    Config toAdd;
+    SsConfig toAdd;
     EditDialog editDialog(toAdd, this);
     if (editDialog.exec() == QDialog::Accepted) {
         configManager->add(toAdd);
@@ -248,7 +245,7 @@ void MainWindow::onPaste()
     QRegExp sip001("ss://(.+)");
     QRegExp sip002("ss://(.+)@(.+):(\\d+)(#.+)?");
     QString name;
-    Config toAdd;
+    SsConfig toAdd;
     if (sip002.exactMatch(s)) {
         name = sip002.cap(4);
         toAdd.server = sip002.cap(2);
@@ -291,7 +288,7 @@ void MainWindow::onPaste()
 void MainWindow::onEdit()
 {
     int row = ui->configTable->currentRow();
-    Config &toEdit = configData[row];
+    SsConfig &toEdit = configData[row];
     if (!processManager->isRunning(toEdit.id)) {
         EditDialog editDialog(toEdit, this);
         if (editDialog.exec() == QDialog::Accepted) {
@@ -304,7 +301,7 @@ void MainWindow::onEdit()
 void MainWindow::onRemove()
 {
     int row = ui->configTable->currentRow();
-    Config &toRemove = configData[row];
+    SsConfig &toRemove = configData[row];
     if (QMessageBox::question(
             this,
             tr("Confirm removing"),
@@ -326,7 +323,7 @@ void MainWindow::onRefresh()
 void MainWindow::onShare()
 {
     int row = ui->configTable->currentRow();
-    Config &toShare = configData[row];
+    SsConfig &toShare = configData[row];
     ShareDialog *shareDialog = new ShareDialog{toShare, this};
     shareDialog->show();
 }

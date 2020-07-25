@@ -3,7 +3,7 @@
 
 #include "tools/qreasy.h"
 
-ShareDialog::ShareDialog(const Config &config, QWidget *parent)
+ShareDialog::ShareDialog(const SsConfig &config, QWidget *parent)
     : QDialog(parent), ui(new Ui::ShareDialog)
 {
     ui->setupUi(this);

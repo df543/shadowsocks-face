@@ -2,7 +2,7 @@
 #define SHAREDIALOG_H
 
 #include "common.hpp"
-#include "model/config.h"
+#include "model/ssconfig.h"
 
 namespace Ui
 {
@@ -14,7 +14,7 @@ class ShareDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit ShareDialog(const Config &config, QWidget *parent = nullptr);
+    explicit ShareDialog(const SsConfig &config, QWidget *parent = nullptr);
     ~ShareDialog();
 
 private:

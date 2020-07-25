@@ -13,6 +13,6 @@ const std::string abbr = "ss-qtw";
 const std::string version = VERSION;
 }
 
-
+Sspm* sspm = nullptr;
 
 }
