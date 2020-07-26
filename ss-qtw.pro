@@ -14,13 +14,12 @@ SOURCES += \
     src/model/ssconfig.cpp \
     src/sspm/processmanager.cpp \
     src/sspm/sspm.cpp \
-    src/third_party/qrcode/src/qrcode.c \
     src/tools/latencytester.cpp \
     src/tools/onceguard.cpp \
-    src/tools/qreasy.cpp \
     src/ui/editdialog.cpp \
     src/ui/mainwindow.cpp \
-    src/ui/sharedialog.cpp
+    src/ui/sharedialog.cpp \
+    src/third_party/QR-Code-generator/cpp/QrCode.cpp
 
 HEADERS += \
     src/data/configmanager.h \
@@ -29,14 +28,14 @@ HEADERS += \
     src/model/ssconfig.h \
     src/sspm/processmanager.h \
     src/sspm/sspm.h \
-    src/third_party/qrcode/src/qrcode.h \
     src/tools/onceguard.h \
     src/tools/qreasy.h \
     src/tools/latencytester.h \
     src/ui/editdialog.h \
     src/ui/custom/imagewidget.h \
     src/ui/mainwindow.h \
-    src/ui/sharedialog.h
+    src/ui/sharedialog.h \
+    src/third_party/QR-Code-generator/cpp/QrCode.hpp
 
 INCLUDEPATH += \
     src/

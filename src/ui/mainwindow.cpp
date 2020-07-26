@@ -362,7 +362,7 @@ void MainWindow::onAbout()
 
                         "<p>"
                         "Special thanks to <a href='https://github.com/shadowsocks/shadowsocks-qt5'>Shadowsocks-Qt5</a> project;<br>"
-                        "Use <a href='https://github.com/ricmoo/QRCode'>ricmoo/QRCode</a> (<a href='https://opensource.org/licenses/MIT'>MIT</a>) to generate QR Code."
+                        "Use <a href='https://github.com/nayuki/QR-Code-generator'>nayuki/QR-Code-generator</a> (<a href='https://opensource.org/licenses/MIT'>MIT</a>) to generate QR Code."
                         "</p>"
 
                         "<hr>"
