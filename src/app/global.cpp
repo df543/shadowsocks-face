@@ -8,8 +8,8 @@ namespace global
 
 namespace about
 {
-const std::string name = "Shadowsocks Qt Wrapper";
-const std::string abbr = "ss-qtw";
+const std::string name = "Shadowsocks Face";
+const std::string abbr = "ss-face";
 const std::string version = VERSION;
 }
 

@@ -368,7 +368,7 @@ void MainWindow::onAbout()
                         "<hr>"
                         "Version: %3<br>"
                         "License: <a href='https://www.gnu.org/licenses/gpl.html'>GPL-3.0</a><br>"
-                        "Project Home: <a href='https://github.com/df543/shadowsocks-qtwrapper'>df543/shadowsocks-qtwrapper</a>"
+                        "Project Home: <a href='https://github.com/df543/Shadowsocks-Face'>df543/Shadowsocks-Face</a>"
                     ).arg(
                         qApp->applicationDisplayName(),
                         qApp->applicationName(),
