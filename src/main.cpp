@@ -1,5 +1,4 @@
 #include "global.h"
-#include "sspm/sspm.h"
 #include "ui/mainwindow.h"
 #include "tools/SingleInstanceDoorbell.h"
 
@@ -14,9 +13,6 @@ int main(int argc, char *argv[])
     QTranslator translator(&a);
     translator.load(QLocale::system(), "", "", ":/translations");
     a.installTranslator(&translator);
-
-    Sspm sspm;
-    global::sspm = &sspm;
 
     MainWindow w;
     if (!w.isHideFirst())

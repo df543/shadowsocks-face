@@ -6,11 +6,11 @@
 #include "global.h"
 #include "tools/latencytester.h"
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow),
-      dirPath(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation))
+MainWindow::MainWindow(QWidget *parent):
+    QMainWindow(parent), ui(new Ui::MainWindow),
+    dirPath(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation))
 {
-    if (!global::sspm->test()) {
+    if (!test_client()) {
         QMessageBox::critical(this, tr("Start Error"), tr("Failed to start ss-local process. Please check shadowsocks-libev installation."));
         exit(1);
     }
@@ -62,9 +62,7 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 MainWindow::~MainWindow()
-{
-    delete ui;
-}
+{ delete ui; }
 
 void MainWindow::focus()
 {
@@ -390,7 +388,7 @@ void MainWindow::loadAutoConnect()
         }
         f.close();
     }
-    if (startIds.size()) hideFirst = true;
+    if (!startIds.empty()) hideFirst = true;
     for (auto &i : configData)
         if (startIds.contains(i.id))
             startConfig(i);

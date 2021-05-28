@@ -2,7 +2,6 @@
 #define GLOBAL_H
 
 #include "version.h"
-#include "sspm/sspm.h"
 
 namespace global
 {
@@ -10,8 +9,6 @@ namespace global
 inline const QString name = "Shadowsocks Face";
 inline const QString abbr = "ss-face";
 inline const QString version = VERSION;
-
-inline Sspm* sspm = nullptr;
 
 }
 

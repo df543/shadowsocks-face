@@ -16,11 +16,9 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
-    bool isHideFirst()
-    {
-        return hideFirst;
-    }
+    ~MainWindow() override;
+    bool isHideFirst() const
+    { return hideFirst; }
 
 public slots:
     void focus();
@@ -36,6 +34,12 @@ private:
     void testLatency(SSConfig &config);
     QList<SSConfig> configData;
     QString dirPath;
+    bool test_client() {
+        QProcess test(this);
+        test.start("ss-local", QStringList());
+        test.waitForFinished();
+        return test.error() != QProcess::FailedToStart;
+    }
 
 private slots:
     void sync();
