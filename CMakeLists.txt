@@ -29,8 +29,7 @@ add_executable(ss-face WIN32
     src/version.h
     src/data/configmanager.cpp
     src/data/configmanager.h
-    src/model/ssconfig.cpp
-    src/model/ssconfig.h
+    src/entity/SSConfig.h
     src/sspm/processmanager.cpp
     src/sspm/processmanager.h
     src/sspm/sspm.cpp

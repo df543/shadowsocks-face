@@ -2,7 +2,7 @@
 #define SSPROCESSLIST_H
 
 
-#include "model/ssconfig.h"
+#include "entity/SSConfig.h"
 
 class ProcessManager: public QObject
 {
@@ -10,15 +10,15 @@ class ProcessManager: public QObject
 
 public:
     explicit ProcessManager(QString dirPath, QObject *parent = nullptr);
-    QProcess *start(int id);
-    void terminate(int id);
-    bool isRunning(int id);
+    QProcess *start(qint64 id);
+    void terminate(qint64 id);
+    bool isRunning(qint64 id);
 
 signals:
     void procChanged();
 
 private:
-    QHash<int, QProcess *> processes;
+    QHash<qint64, QProcess *> processes;
     QDir configDir;
 };
 

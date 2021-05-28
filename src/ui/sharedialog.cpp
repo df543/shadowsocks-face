@@ -3,7 +3,7 @@
 
 #include "tools/QRMat.h"
 
-ShareDialog::ShareDialog(const SsConfig &config, QWidget *parent):
+ShareDialog::ShareDialog(const SSConfig &config, QWidget *parent):
     QDialog(parent), ui(new Ui::ShareDialog)
 {
     ui->setupUi(this);

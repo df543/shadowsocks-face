@@ -2,12 +2,12 @@
 
 Sspm::Sspm(QObject *parent) : QObject(parent) {}
 
-void Sspm::start(int id, const SsConfig &config)
+void Sspm::start(qint64 id, const SSConfig &config)
 {
 
 }
 
-void Sspm::terminate(int id)
+void Sspm::terminate(qint64 id)
 {
 
 }

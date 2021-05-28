@@ -2,29 +2,29 @@
 #define SSPM_H
 
 
-#include "model/ssconfig.h"
+#include "entity/SSConfig.h"
 
 class Sspm : public QObject
 {
     Q_OBJECT
 public:
     explicit Sspm(QObject *parent = nullptr);
-    void start(int id, const SsConfig &config);
-    void terminate(int id);
+    void start(qint64 id, const SSConfig &config);
+    void terminate(qint64 id);
     bool test();
 
 signals:
     void changed();
-    void out(const SsConfig &config, QByteArray data);
-    void err(const SsConfig &config, QByteArray data);
+    void out(const SSConfig &config, QByteArray data);
+    void err(const SSConfig &config, QByteArray data);
 
 private:
     struct Ss {
-        SsConfig config;
+        SSConfig config;
         QProcess process;
         QTemporaryFile temp;
 
-        Ss(const SsConfig &config, QObject *parent = nullptr)
+        Ss(const SSConfig &config, QObject *parent = nullptr)
             : config(config), process(parent), temp(parent)
         {
             // TODO: write json

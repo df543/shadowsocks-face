@@ -7,7 +7,7 @@ ProcessManager::ProcessManager(QString dirPath, QObject *parent)
         throw std::runtime_error("invalid config dir");
 }
 
-QProcess *ProcessManager::start(int id)
+QProcess *ProcessManager::start(qint64 id)
 {
     QFileInfo json(configDir.filePath(QString("%1.json").arg(id)));
     if (!json.exists())
@@ -20,7 +20,7 @@ QProcess *ProcessManager::start(int id)
     return ssproc;
 }
 
-void ProcessManager::terminate(int id)
+void ProcessManager::terminate(qint64 id)
 {
     if (processes.find(id) == processes.end())
         throw std::runtime_error("process not found");
@@ -28,7 +28,7 @@ void ProcessManager::terminate(int id)
     processes.remove(id);
 }
 
-bool ProcessManager::isRunning(int id)
+bool ProcessManager::isRunning(qint64 id)
 {
     if (processes.find(id) != processes.end()) {
         if (processes[id]->state() != QProcess::NotRunning)

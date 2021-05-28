@@ -12,7 +12,7 @@ ConfigManager::ConfigManager(QString dirPath, QObject *parent)
     incCnt++;
 }
 
-void ConfigManager::saveConfig(const SsConfig &config)
+void ConfigManager::saveConfig(const SSConfig &config)
 {
     QFile jsonFile(configDir.filePath(config.fileName()));
     if (!jsonFile.open(QIODevice::WriteOnly))
@@ -21,34 +21,34 @@ void ConfigManager::saveConfig(const SsConfig &config)
     jsonFile.close();
 }
 
-void ConfigManager::add(SsConfig &config)
+void ConfigManager::add(SSConfig &config)
 {
     configDir.refresh();
     config.id = incCnt++;
     saveConfig(config);
 }
 
-void ConfigManager::remove(const SsConfig &config)
+void ConfigManager::remove(const SSConfig &config)
 {
     configDir.refresh();
     configDir.remove(config.fileName());
 }
 
-void ConfigManager::edit(const SsConfig &config)
+void ConfigManager::edit(const SSConfig &config)
 {
     configDir.refresh();
     saveConfig(config);
 }
 
-QList<SsConfig> ConfigManager::query()
+QList<SSConfig> ConfigManager::query()
 {
     configDir.refresh();
-    QList<SsConfig> ret;
+    QList<SSConfig> ret;
     for (auto i : configDir.entryInfoList()) {
         QFile jsonFile(i.filePath());
         if (!jsonFile.open(QIODevice::ReadOnly))
             throw std::runtime_error("couldn't open config file");
-        ret.append(SsConfig::fromJsonObject(QJsonDocument::fromJson(jsonFile.readAll()).object()));
+        ret.append(SSConfig::fromJsonObject(QJsonDocument::fromJson(jsonFile.readAll()).object()));
         jsonFile.close();
     }
     return ret;
@@ -67,7 +67,7 @@ void ConfigManager::importGUIConfig(QString guiConfigPath)
     QJsonArray jsonConfigs = json.find("configs")->toArray();
 
     for (auto i : jsonConfigs) {
-        SsConfig toAdd = SsConfig::fromJsonObject(i.toObject());
+        SSConfig toAdd = SSConfig::fromJsonObject(i.toObject());
         toAdd.local_port = localPort;
         if (shareOverLan)
             toAdd.local_address = "0.0.0.0";
@@ -82,7 +82,7 @@ void ConfigManager::exportGUIConfig(QString guiConfigPath)
         QJsonObject oneConfig;
         oneConfig["method"] = i.method;
         oneConfig["password"] = i.password;
-        oneConfig["server"] = i.server;
+        oneConfig["server"] = i.server_address;
         oneConfig["server_port"] = i.server_port;
         oneConfig["remarks"] = i.remarks;
         jsonConfigs.push_back(oneConfig);

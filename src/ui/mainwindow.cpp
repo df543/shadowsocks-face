@@ -72,7 +72,7 @@ void MainWindow::focus()
     activateWindow();
 }
 
-void MainWindow::testLatency(SsConfig &config)
+void MainWindow::testLatency(SSConfig &config)
 {
     if (processManager->isRunning(config.id)) {
         LatencyTester *tester = new LatencyTester(
@@ -93,7 +93,7 @@ void MainWindow::testLatency(SsConfig &config)
 void MainWindow::onTestLatency()
 {
     int row = ui->configTable->currentRow();
-    SsConfig &config = configData[row];
+    SSConfig &config = configData[row];
     testLatency(config);
 }
 
@@ -101,7 +101,7 @@ void MainWindow::sync()
 {
     ui->configTable->setRowCount(configData.size());
     for (int i = 0; i < configData.size(); i++) {
-        const SsConfig &config = configData[i];
+        const SSConfig &config = configData[i];
         ui->configTable->setItem(i, 0, new QTableWidgetItem(config.getName()));
 
         QString latency;
@@ -124,14 +124,14 @@ void MainWindow::sync()
 void MainWindow::reloadConfig()
 {
     // save latency
-    QHash<int, int> latency;
+    QHash<qint64, int> latency;
     for (const auto &i : configData)
         latency[i.id] = i.latencyMs;
     // reload
     configData = configManager->query();
     // restore latency
     for (auto &i : configData)
-        if (latency.count(i.id))
+        if (latency.contains(i.id))
             i.latencyMs = latency[i.id];
     // refresh view
     sync();
@@ -149,7 +149,7 @@ void MainWindow::checkCurrentRow()
 {
     if (ui->configTable->selectedRanges().size()) {
         int row = ui->configTable->currentRow();
-        int id = configData[row].id;
+        qint64 id = configData[row].id;
         bool connected = processManager->isRunning(id);
         ui->actionConnect->setEnabled(!connected);
         ui->actionDisconnect->setEnabled(connected);
@@ -167,7 +167,7 @@ void MainWindow::checkCurrentRow()
     }
 }
 
-void MainWindow::startConfig(SsConfig &config)
+void MainWindow::startConfig(SSConfig &config)
 {
     auto p = processManager->start(config.id);
     if (p) {
@@ -198,7 +198,7 @@ void MainWindow::startConfig(SsConfig &config)
 void MainWindow::onConnect()
 {
     int row = ui->configTable->currentRow();
-    SsConfig &toConnect = configData[row];
+    SSConfig &toConnect = configData[row];
 
     // check port use
     for (const auto &i : configData)
@@ -221,13 +221,13 @@ void MainWindow::onConnect()
 void MainWindow::onDisconnect()
 {
     int row = ui->configTable->currentRow();
-    int id = configData[row].id;
+    qint64 id = configData[row].id;
     processManager->terminate(id);
 }
 
 void MainWindow::onManually()
 {
-    SsConfig toAdd;
+    SSConfig toAdd;
     EditDialog editDialog(toAdd, this);
     if (editDialog.exec() == QDialog::Accepted) {
         configManager->add(toAdd);
@@ -245,10 +245,10 @@ void MainWindow::onPaste()
     QRegExp sip001("ss://(.+)");
     QRegExp sip002("ss://(.+)@(.+):(\\d+)(#.+)?");
     QString name;
-    SsConfig toAdd;
+    SSConfig toAdd;
     if (sip002.exactMatch(s)) {
         name = sip002.cap(4);
-        toAdd.server = sip002.cap(2);
+        toAdd.server_address = sip002.cap(2);
         toAdd.server_port = sip002.cap(3).toInt();
         QString hostinfo = QByteArray::fromBase64(sip002.cap(1).toUtf8());
         QRegExp reg("(.+):(.+)");
@@ -257,7 +257,7 @@ void MainWindow::onPaste()
         toAdd.password = reg.cap(2);
     } else if (sip001.exactMatch(s)) {
         QString info = sip001.cap(1);
-        if (info.count('#')) {
+        if (info.contains('#')) {
             int i = info.indexOf('#');
             name = info.right(info.size() - i - 1);
             info = info.left(i);
@@ -267,7 +267,7 @@ void MainWindow::onPaste()
         reg.indexIn(info);
         toAdd.method = reg.cap(1);
         toAdd.password = reg.cap(2);
-        toAdd.server = reg.cap(3);
+        toAdd.server_address = reg.cap(3);
         toAdd.server_port = reg.cap(4).toInt();
     } else
         return;
@@ -288,7 +288,7 @@ void MainWindow::onPaste()
 void MainWindow::onEdit()
 {
     int row = ui->configTable->currentRow();
-    SsConfig &toEdit = configData[row];
+    SSConfig &toEdit = configData[row];
     if (!processManager->isRunning(toEdit.id)) {
         EditDialog editDialog(toEdit, this);
         if (editDialog.exec() == QDialog::Accepted) {
@@ -301,7 +301,7 @@ void MainWindow::onEdit()
 void MainWindow::onRemove()
 {
     int row = ui->configTable->currentRow();
-    SsConfig &toRemove = configData[row];
+    SSConfig &toRemove = configData[row];
     if (QMessageBox::question(
             this,
             tr("Confirm removing"),
@@ -323,7 +323,7 @@ void MainWindow::onRefresh()
 void MainWindow::onShare()
 {
     int row = ui->configTable->currentRow();
-    SsConfig &toShare = configData[row];
+    SSConfig &toShare = configData[row];
     ShareDialog *shareDialog = new ShareDialog{toShare, this};
     shareDialog->show();
 }
@@ -380,7 +380,7 @@ void MainWindow::onAbout()
 void MainWindow::loadAutoConnect()
 {
     QFile f{QDir{dirPath}.filePath("last_connected.txt")};
-    QSet<int> startIds;
+    QSet<qint64> startIds;
     if (f.open(QIODevice::ReadOnly)) {
         QTextStream in(&f);
         for (;;) {

@@ -1,7 +1,7 @@
 #include "editdialog.h"
 #include "ui_editdialog.h"
 
-EditDialog::EditDialog(SsConfig &config, QWidget *parent)
+EditDialog::EditDialog(SSConfig &config, QWidget *parent)
     : QDialog(parent), ui(new Ui::EditDialog), config(config)
 {
     ui->setupUi(this);
@@ -10,7 +10,7 @@ EditDialog::EditDialog(SsConfig &config, QWidget *parent)
     else setWindowTitle(tr("Edit"));
 
     ui->lineEdit_name->setText(config.remarks);
-    ui->lineEdit_serverAddr->setText(config.server);
+    ui->lineEdit_serverAddr->setText(config.server_address);
     ui->spinBox_serverPort->setValue(config.server_port);
     ui->comboBox_method->setCurrentText(config.method);
     ui->lineEdit_password->setText(config.password);
@@ -48,7 +48,7 @@ void EditDialog::onSave()
     if (!valid) return;
 
     config.remarks = ui->lineEdit_name->text();
-    config.server = ui->lineEdit_serverAddr->text();
+    config.server_address = ui->lineEdit_serverAddr->text();
     config.server_port = ui->spinBox_serverPort->value();
     config.local_port = ui->spinBox_localPort->value();
     config.password = ui->lineEdit_password->text();
