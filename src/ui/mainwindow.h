@@ -1,7 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "common.hpp"
 #include "data/configmanager.h"
 #include "sspm/processmanager.h"
 #include "app/global.h"

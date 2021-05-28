@@ -3,7 +3,7 @@
         <file alias="this">../ss-face.png</file>
     </qresource>
     <qresource prefix="/translations">
-        <file alias="zh_CN">translations/zh_CN.qm</file>
+        <file alias="zh_CN">i18n/zh_CN.qm</file>
     </qresource>
     <qresource prefix="/icons">
         <file alias="application-exit">icons/application-exit.png</file>

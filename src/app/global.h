@@ -1,7 +1,7 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-#include "common.hpp"
+
 #include "sspm/sspm.h"
 
 namespace global

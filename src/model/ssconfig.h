@@ -1,7 +1,7 @@
 #ifndef SSCONFIG_H
 #define SSCONFIG_H
 
-#include "common.hpp"
+
 #include "tools/latencytester.h"
 
 class SsConfig

@@ -1,7 +1,7 @@
 #ifndef SSPM_H
 #define SSPM_H
 
-#include "common.hpp"
+
 #include "model/ssconfig.h"
 
 class Sspm : public QObject

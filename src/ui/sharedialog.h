@@ -1,7 +1,7 @@
 #ifndef SHAREDIALOG_H
 #define SHAREDIALOG_H
 
-#include "common.hpp"
+
 #include "model/ssconfig.h"
 
 namespace Ui

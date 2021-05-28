@@ -1,7 +1,7 @@
 #ifndef EDITDIALOG_H
 #define EDITDIALOG_H
 
-#include "common.hpp"
+
 #include "model/ssconfig.h"
 
 namespace Ui

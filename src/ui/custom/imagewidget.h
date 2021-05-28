@@ -1,7 +1,7 @@
 #ifndef IMAGEWIDGET_H
 #define IMAGEWIDGET_H
 
-#include "common.hpp"
+
 
 class ImageWidget: public QWidget {
     Q_OBJECT

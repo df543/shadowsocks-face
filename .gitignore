@@ -1,8 +1,7 @@
-# Qt
-*.pro.user
+build/
+.idea/
+.vscode/
 
 # QtCreator
+CMakeLists.txt.user*
 *.autosave
-
-# folders
-build/

@@ -1,7 +1,7 @@
 #ifndef LATENCYTESTER_H
 #define LATENCYTESTER_H
 
-#include "common.hpp"
+
 
 #define NOTEST -1
 #define TIMEOUT -2

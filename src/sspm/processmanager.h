@@ -1,7 +1,7 @@
 #ifndef SSPROCESSLIST_H
 #define SSPROCESSLIST_H
 
-#include "common.hpp"
+
 #include "model/ssconfig.h"
 
 class ProcessManager: public QObject

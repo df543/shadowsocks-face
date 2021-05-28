@@ -1,10 +1,8 @@
-#ifndef PCH_HPP
-#define PCH_HPP
-
-// c
-#include <assert.h>
+#ifndef PCH_H
+#define PCH_H
 
 // c++
+#include <cassert>
 #include <functional>
 #include <iostream>
 #include <exception>
@@ -12,6 +10,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <memory>
 
 // qt core
 #include <QByteArray>
@@ -34,7 +33,7 @@
 #include <QClipboard>
 #include <QCloseEvent>
 #include <QPainter>
-#include <QRegExpValidator>
+#include <QRegularExpressionValidator>
 
 // qt widgets
 #include <QAction>
@@ -52,4 +51,4 @@
 // qt network
 #include <QtNetwork>
 
-#endif // PCH_HPP
+#endif // PCH_H

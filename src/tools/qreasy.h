@@ -1,7 +1,7 @@
 #ifndef QREASY_H
 #define QREASY_H
 
-#include "common.hpp"
+
 #include "third_party/QR-Code-generator/cpp/QrCode.hpp"
 
 class QrEasy
