@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 project(ss-face LANGUAGES CXX)
 
-# add_subdirectory(third_party/QR-Code-generator)
+add_subdirectory(third_party/QR-Code-generator)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -24,10 +24,9 @@ add_custom_target(ss-face_ts ALL DEPENDS ${TS_FILES})
 
 add_executable(ss-face WIN32
     res/res.qrc
-    src/app/global.cpp
-    src/app/global.h
-    src/app/main.cpp
-    src/app/version.h
+    src/global.h
+    src/main.cpp
+    src/version.h
     src/data/configmanager.cpp
     src/data/configmanager.h
     src/model/ssconfig.cpp
@@ -36,13 +35,10 @@ add_executable(ss-face WIN32
     src/sspm/processmanager.h
     src/sspm/sspm.cpp
     src/sspm/sspm.h
-    src/third_party/QR-Code-generator/cpp/QrCode.cpp
-    src/third_party/QR-Code-generator/cpp/QrCode.hpp
     src/tools/latencytester.cpp
     src/tools/latencytester.h
-    src/tools/onceguard.cpp
-    src/tools/onceguard.h
-    src/tools/qreasy.h
+    src/tools/SingleInstanceDoorbell.h
+    src/tools/QRMat.h
     src/ui/custom/imagewidget.h
     src/ui/editdialog.cpp
     src/ui/editdialog.h
@@ -59,5 +55,5 @@ target_precompile_headers(ss-face PRIVATE src/pch.h)
 
 target_link_libraries(ss-face PRIVATE
     Qt::Widgets
-    Qt::Network)
-    # QR-Code-generator)
+    Qt::Network
+    QR-Code-generator)

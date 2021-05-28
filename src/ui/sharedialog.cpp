@@ -1,10 +1,10 @@
 #include "sharedialog.h"
 #include "ui_sharedialog.h"
 
-#include "tools/qreasy.h"
+#include "tools/QRMat.h"
 
-ShareDialog::ShareDialog(const SsConfig &config, QWidget *parent)
-    : QDialog(parent), ui(new Ui::ShareDialog)
+ShareDialog::ShareDialog(const SsConfig &config, QWidget *parent):
+    QDialog(parent), ui(new Ui::ShareDialog)
 {
     ui->setupUi(this);
     setWindowTitle(tr("Share '%1'").arg(config.remarks));
@@ -13,7 +13,7 @@ ShareDialog::ShareDialog(const SsConfig &config, QWidget *parent)
     QString uri = config.toUri();
     ui->textBrowser->setText(uri);
 
-    auto qr = QrEasy(uri.toStdString());
+    auto qr = QRMat(uri);
     int size = qr.size();
     QImage qrImage(size, size, QImage::Format_Mono);
     for (int i = 0; i < size; i++)
@@ -23,6 +23,4 @@ ShareDialog::ShareDialog(const SsConfig &config, QWidget *parent)
 }
 
 ShareDialog::~ShareDialog()
-{
-    delete ui;
-}
+{ delete ui; }

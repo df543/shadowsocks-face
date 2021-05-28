@@ -3,7 +3,7 @@
 
 #include "editdialog.h"
 #include "sharedialog.h"
-#include "app/global.h"
+#include "global.h"
 #include "tools/latencytester.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     }
 
     ui->setupUi(this);
-    setWindowTitle(QString::fromStdString(global::about::name));
+    setWindowTitle(global::name);
     ui->configTable->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     connect(ui->configTable, &QTableWidget::itemSelectionChanged, this, &MainWindow::checkCurrentRow);
 

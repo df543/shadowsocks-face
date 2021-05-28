@@ -3,7 +3,7 @@
 
 #include "data/configmanager.h"
 #include "sspm/processmanager.h"
-#include "app/global.h"
+#include "global.h"
 
 namespace Ui
 {
