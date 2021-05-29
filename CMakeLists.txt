@@ -40,9 +40,9 @@ add_executable(ss-face WIN32
     src/ui/editdialog.cpp
     src/ui/editdialog.h
     src/ui/editdialog.ui
-    src/ui/mainwindow.cpp
-    src/ui/mainwindow.h
-    src/ui/mainwindow.ui
+    src/ui/MainWindow.cpp
+    src/ui/MainWindow.h
+    src/ui/MainWindow.ui
     src/ui/sharedialog.cpp
     src/ui/sharedialog.h
     src/ui/sharedialog.ui)

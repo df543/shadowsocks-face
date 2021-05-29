@@ -1,5 +1,5 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "MainWindow.h"
+#include "ui_MainWindow.h"
 
 #include "editdialog.h"
 #include "sharedialog.h"
@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent):
 {
     if (!test_client()) {
         QMessageBox::critical(this, tr("Start Error"), tr("Failed to start ss-local process. Please check shadowsocks-libev installation."));
-        exit(1);
+        QApplication::exit(1);
     }
 
     ui->setupUi(this);
@@ -32,28 +32,12 @@ MainWindow::MainWindow(QWidget *parent):
     sync();
     checkCurrentRow();
 
-    connect(ui->actionConnect,          &QAction::triggered, this, &MainWindow::onConnect);
-    connect(ui->actionDisconnect,       &QAction::triggered, this, &MainWindow::onDisconnect);
-    connect(ui->actionEdit,             &QAction::triggered, this, &MainWindow::onEdit);
-    connect(ui->actionShare,            &QAction::triggered, this, &MainWindow::onShare);
-    connect(ui->actionImport,           &QAction::triggered, this, &MainWindow::onImport);
-    connect(ui->actionExport,           &QAction::triggered, this, &MainWindow::onExport);
-    connect(ui->actionQuit,             &QAction::triggered, qApp, &QApplication::quit);
-    connect(ui->actionAbout,            &QAction::triggered, this, &MainWindow::onAbout);
-    connect(ui->actionAboutQt,          &QAction::triggered, [this] {QMessageBox::aboutQt(this);});
-    connect(ui->actionManually,         &QAction::triggered, this, &MainWindow::onManually);
-    connect(ui->actionPaste,            &QAction::triggered, this, &MainWindow::onPaste);
-    connect(ui->actionRemove,           &QAction::triggered, this, &MainWindow::onRemove);
-    connect(ui->actionRefresh,          &QAction::triggered, this, &MainWindow::onRefresh);
-    connect(ui->actionShow,             &QAction::triggered, this, &MainWindow::focus);
-    connect(ui->actionTestLatency,      &QAction::triggered, this, &MainWindow::onTestLatency);
-
-    connect(ui->configTable, &QTableWidget::itemDoubleClicked, this, &MainWindow::onEdit);
+    connect(ui->configTable, &QTableWidget::itemDoubleClicked, ui->actionEdit, &QAction::triggered);
     for (auto i : ui->mainToolBar->actions())
         ui->configTable->addAction(i);
 
     systray.setIcon(QIcon(":/icon/this"));
-    QMenu *systrayMenu = new QMenu(this);
+    auto *systrayMenu = new QMenu(this);
     systrayMenu->addAction(ui->actionShow);
     systrayMenu->addAction(ui->actionQuit);
     systray.setContextMenu(systrayMenu);
@@ -73,7 +57,7 @@ void MainWindow::focus()
 void MainWindow::testLatency(SSConfig &config)
 {
     if (processManager->isRunning(config.id)) {
-        LatencyTester *tester = new LatencyTester(
+        auto *tester = new LatencyTester(
             QNetworkProxy(QNetworkProxy::Socks5Proxy, config.local_address, config.local_port),
             QUrl("https://google.com"),
             this
@@ -86,13 +70,6 @@ void MainWindow::testLatency(SSConfig &config)
         });
         tester->start();
     }
-}
-
-void MainWindow::onTestLatency()
-{
-    int row = ui->configTable->currentRow();
-    SSConfig &config = configData[row];
-    testLatency(config);
 }
 
 void MainWindow::sync()
@@ -145,7 +122,7 @@ void MainWindow::setRow(int row, bool bold)
 
 void MainWindow::checkCurrentRow()
 {
-    if (ui->configTable->selectedRanges().size()) {
+    if (!ui->configTable->selectedRanges().empty()) {
         int row = ui->configTable->currentRow();
         qint64 id = configData[row].id;
         bool connected = processManager->isRunning(id);
@@ -193,7 +170,48 @@ void MainWindow::startConfig(SSConfig &config)
     });
 }
 
-void MainWindow::onConnect()
+void MainWindow::loadAutoConnect()
+{
+    QFile f{QDir{dirPath}.filePath("last_connected.txt")};
+    QSet<qint64> startIds;
+    if (f.open(QIODevice::ReadOnly)) {
+        QTextStream in(&f);
+        for (;;) {
+            QString line = in.readLine();
+            if (line.isNull()) break;
+            else startIds.insert(line.toInt());
+        }
+        f.close();
+    }
+    if (!startIds.empty()) hideFirst = true;
+    for (auto &i : configData)
+        if (startIds.contains(i.id))
+            startConfig(i);
+}
+
+void MainWindow::saveAutoConnect()
+{
+    QFile f{QDir{dirPath}.filePath("last_connected.txt")};
+    if (f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+        QTextStream out(&f);
+        for (const auto &i : configData)
+            if (processManager->isRunning(i.id))
+                out << i.id << "\n";
+        f.close();
+    }
+}
+
+void MainWindow::closeEvent(QCloseEvent *e)
+{
+    if (e->spontaneous()) {
+        e->ignore();
+        hide();
+    } else {
+        QMainWindow::closeEvent(e);
+    }
+}
+
+void MainWindow::on_actionConnect_triggered()
 {
     int row = ui->configTable->currentRow();
     SSConfig &toConnect = configData[row];
@@ -216,14 +234,90 @@ void MainWindow::onConnect()
     startConfig(toConnect);
 }
 
-void MainWindow::onDisconnect()
+void MainWindow::on_actionDisconnect_triggered()
 {
     int row = ui->configTable->currentRow();
     qint64 id = configData[row].id;
     processManager->terminate(id);
 }
 
-void MainWindow::onManually()
+void MainWindow::on_actionEdit_triggered()
+{
+    int row = ui->configTable->currentRow();
+    SSConfig &toEdit = configData[row];
+    if (!processManager->isRunning(toEdit.id)) {
+        EditDialog editDialog(toEdit, this);
+        if (editDialog.exec() == QDialog::Accepted) {
+            configManager->edit(toEdit);
+            sync();
+        }
+    }
+}
+
+void MainWindow::on_actionShare_triggered()
+{
+    int row = ui->configTable->currentRow();
+    SSConfig &toShare = configData[row];
+    auto *shareDialog = new ShareDialog{toShare, this};
+    shareDialog->show();
+}
+
+void MainWindow::on_actionImport_triggered()
+{
+    configManager->importGUIConfig(
+        QFileDialog::getOpenFileName(
+            this,
+            QString(),
+            QString(),
+            "GUI Config(*.json)"
+        )
+    );
+    reloadConfig();
+}
+
+void MainWindow::on_actionExport_triggered()
+{
+    configManager->exportGUIConfig(
+        QFileDialog::getSaveFileName(
+            this,
+            QString(),
+            "gui-config.json",
+            "GUI Config(*.json)"
+        )
+    );
+}
+
+void MainWindow::on_actionQuit_triggered()
+{ QApplication::quit(); }
+
+void MainWindow::on_actionAbout_triggered()
+{
+    QString content{tr(
+                        "<h1>%1</h1>"
+
+                        "<p><i>%2</i> is a <a href='https://github.com/shadowsocks/shadowsocks-libev'>shadowsocks-libev</a> client wrapper using qt5.</p>"
+
+                        "<p>"
+                        "Special thanks to <a href='https://github.com/shadowsocks/shadowsocks-qt5'>Shadowsocks-Qt5</a> project;<br>"
+                        "Use <a href='https://github.com/nayuki/QR-Code-generator'>nayuki/QR-Code-generator</a> (<a href='https://opensource.org/licenses/MIT'>MIT</a>) to generate QR Code."
+                        "</p>"
+
+                        "<hr>"
+                        "Version: %3<br>"
+                        "License: <a href='https://www.gnu.org/licenses/gpl.html'>GPL-3.0</a><br>"
+                        "Project Home: <a href='https://github.com/df543/Shadowsocks-Face'>df543/Shadowsocks-Face</a>"
+                    ).arg(
+                        qApp->applicationDisplayName(),
+                        qApp->applicationName(),
+                        qApp->applicationVersion()
+                    )};
+    QMessageBox::about(this, tr("About"), content);
+}
+
+void MainWindow::on_actionAboutQt_triggered()
+{ QMessageBox::aboutQt(this); }
+
+void MainWindow::on_actionManually_triggered()
 {
     SSConfig toAdd;
     EditDialog editDialog(toAdd, this);
@@ -234,7 +328,27 @@ void MainWindow::onManually()
     }
 }
 
-void MainWindow::onPaste()
+void MainWindow::on_actionRemove_triggered()
+{
+    int row = ui->configTable->currentRow();
+    SSConfig &toRemove = configData[row];
+    if (QMessageBox::question(
+            this,
+            tr("Confirm removing"),
+            tr("Are you sure to remove config '%1'?").arg(toRemove.getName()),
+            QMessageBox::StandardButtons(QMessageBox::Yes | QMessageBox::No),
+            QMessageBox::No
+        ) == QMessageBox::Yes) {
+        configManager->remove(toRemove);
+        configData.removeAt(row);
+        sync();
+    }
+}
+
+void MainWindow::on_actionRefresh_triggered()
+{ reloadConfig(); }
+
+void MainWindow::on_actionPaste_triggered()
 {
     QClipboard *clipboard = QGuiApplication::clipboard();
     QString s = clipboard->text();
@@ -283,135 +397,12 @@ void MainWindow::onPaste()
     }
 }
 
-void MainWindow::onEdit()
+void MainWindow::on_actionShow_triggered()
+{ focus(); }
+
+void MainWindow::on_actionTestLatency_triggered()
 {
     int row = ui->configTable->currentRow();
-    SSConfig &toEdit = configData[row];
-    if (!processManager->isRunning(toEdit.id)) {
-        EditDialog editDialog(toEdit, this);
-        if (editDialog.exec() == QDialog::Accepted) {
-            configManager->edit(toEdit);
-            sync();
-        }
-    }
-}
-
-void MainWindow::onRemove()
-{
-    int row = ui->configTable->currentRow();
-    SSConfig &toRemove = configData[row];
-    if (QMessageBox::question(
-            this,
-            tr("Confirm removing"),
-            tr("Are you sure to remove config '%1'?").arg(toRemove.getName()),
-            QMessageBox::StandardButtons(QMessageBox::Yes | QMessageBox::No),
-            QMessageBox::No
-        ) == QMessageBox::Yes) {
-        configManager->remove(toRemove);
-        configData.removeAt(row);
-        sync();
-    }
-}
-
-void MainWindow::onRefresh()
-{
-    reloadConfig();
-}
-
-void MainWindow::onShare()
-{
-    int row = ui->configTable->currentRow();
-    SSConfig &toShare = configData[row];
-    ShareDialog *shareDialog = new ShareDialog{toShare, this};
-    shareDialog->show();
-}
-
-void MainWindow::onImport()
-{
-    configManager->importGUIConfig(
-        QFileDialog::getOpenFileName(
-            this,
-            QString(),
-            QString(),
-            "GUI Config(*.json)"
-        )
-    );
-    reloadConfig();
-}
-
-void MainWindow::onExport()
-{
-    configManager->exportGUIConfig(
-        QFileDialog::getSaveFileName(
-            this,
-            QString(),
-            "gui-config.json",
-            "GUI Config(*.json)"
-        )
-    );
-}
-
-void MainWindow::onAbout()
-{
-    QString content{tr(
-                        "<h1>%1</h1>"
-
-                        "<p><i>%2</i> is a <a href='https://github.com/shadowsocks/shadowsocks-libev'>shadowsocks-libev</a> client wrapper using qt5.</p>"
-
-                        "<p>"
-                        "Special thanks to <a href='https://github.com/shadowsocks/shadowsocks-qt5'>Shadowsocks-Qt5</a> project;<br>"
-                        "Use <a href='https://github.com/nayuki/QR-Code-generator'>nayuki/QR-Code-generator</a> (<a href='https://opensource.org/licenses/MIT'>MIT</a>) to generate QR Code."
-                        "</p>"
-
-                        "<hr>"
-                        "Version: %3<br>"
-                        "License: <a href='https://www.gnu.org/licenses/gpl.html'>GPL-3.0</a><br>"
-                        "Project Home: <a href='https://github.com/df543/Shadowsocks-Face'>df543/Shadowsocks-Face</a>"
-                    ).arg(
-                        qApp->applicationDisplayName(),
-                        qApp->applicationName(),
-                        qApp->applicationVersion()
-                    )};
-    QMessageBox::about(this, tr("About"), content);
-}
-
-void MainWindow::loadAutoConnect()
-{
-    QFile f{QDir{dirPath}.filePath("last_connected.txt")};
-    QSet<qint64> startIds;
-    if (f.open(QIODevice::ReadOnly)) {
-        QTextStream in(&f);
-        for (;;) {
-            QString line = in.readLine();
-            if (line.isNull()) break;
-            else startIds.insert(line.toInt());
-        }
-        f.close();
-    }
-    if (!startIds.empty()) hideFirst = true;
-    for (auto &i : configData)
-        if (startIds.contains(i.id))
-            startConfig(i);
-}
-
-void MainWindow::saveAutoConnect()
-{
-    QFile f{QDir{dirPath}.filePath("last_connected.txt")};
-    if (f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-        QTextStream out(&f);
-        for (const auto &i : configData)
-            if (processManager->isRunning(i.id))
-                out << i.id << "\n";
-        f.close();
-    }
-}
-
-void MainWindow::closeEvent(QCloseEvent *e)
-{
-    if (e->spontaneous()) {
-        e->ignore();
-        hide();
-    } else {
-        QMainWindow::closeEvent(e);
-    }
+    SSConfig &config = configData[row];
+    testLatency(config);
 }

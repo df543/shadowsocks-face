@@ -1,5 +1,5 @@
 #include "global.h"
-#include "ui/mainwindow.h"
+#include "ui/MainWindow.h"
 #include "tools/SingleInstanceDoorbell.h"
 
 int main(int argc, char *argv[])

@@ -5,10 +5,9 @@
 #include "sspm/processmanager.h"
 #include "global.h"
 
-namespace Ui
-{
-class MainWindow;
-}
+QT_BEGIN_NAMESPACE
+namespace Ui { class MainWindow; }
+QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
 {
@@ -47,21 +46,25 @@ private slots:
     void checkCurrentRow();
     void loadAutoConnect();
     void saveAutoConnect();
-    void onConnect();
-    void onDisconnect();
-    void onEdit();
-    void onShare();
-    void onImport();
-    void onExport();
-    void onAbout();
-    void onManually();
-    void onPaste();
-    void onRemove();
-    void onRefresh();
-    void onTestLatency();
+
+    void on_actionConnect_triggered();
+    void on_actionDisconnect_triggered();
+    void on_actionEdit_triggered();
+    void on_actionShare_triggered();
+    void on_actionImport_triggered();
+    void on_actionExport_triggered();
+    void on_actionQuit_triggered();
+    void on_actionAbout_triggered();
+    void on_actionAboutQt_triggered();
+    void on_actionManually_triggered();
+    void on_actionRemove_triggered();
+    void on_actionRefresh_triggered();
+    void on_actionPaste_triggered();
+    void on_actionShow_triggered();
+    void on_actionTestLatency_triggered();
 
 protected slots:
-    void closeEvent(QCloseEvent *e);
+    void closeEvent(QCloseEvent *e) override;
 };
 
 #endif // MAINWINDOW_H
