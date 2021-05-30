@@ -2,21 +2,14 @@
 #define PCH_H
 
 // c++
-#include <cassert>
-#include <functional>
-#include <iostream>
 #include <exception>
+#include <iostream>
 #include <stdexcept>
-#include <string>
-#include <vector>
-#include <algorithm>
-#include <memory>
 
 // qt core
 #include <QByteArray>
 #include <QChar>
 #include <QDateTime>
-#include <QtGlobal>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -27,7 +20,7 @@
 #include <QTemporaryFile>
 #include <QTextStream>
 #include <QTranslator>
-#include <QUuid>
+#include <QtGlobal>
 
 // qt gui
 #include <QClipboard>
