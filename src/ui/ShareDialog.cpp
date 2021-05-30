@@ -1,5 +1,5 @@
-#include "sharedialog.h"
-#include "ui_sharedialog.h"
+#include "ShareDialog.h"
+#include "ui_ShareDialog.h"
 
 #include "tools/QRMat.h"
 

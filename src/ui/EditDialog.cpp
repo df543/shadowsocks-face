@@ -1,5 +1,5 @@
-#include "editdialog.h"
-#include "ui_editdialog.h"
+#include "EditDialog.h"
+#include "ui_EditDialog.h"
 
 EditDialog::EditDialog(SSConfig &config, QWidget *parent)
     : QDialog(parent), ui(new Ui::EditDialog), config(config)

@@ -1,5 +1,5 @@
-#ifndef QRMAT_H
-#define QRMAT_H
+#ifndef QR_MAT_H
+#define QR_MAT_H
 
 #include <QrCode.hpp>
 
@@ -15,4 +15,4 @@ private:
     qrcodegen::QrCode qr;
 };
 
-#endif // QRMAT_H
+#endif // QR_MAT_H

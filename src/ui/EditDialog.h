@@ -1,13 +1,11 @@
-#ifndef EDITDIALOG_H
-#define EDITDIALOG_H
-
+#ifndef EDIT_DIALOG_H
+#define EDIT_DIALOG_H
 
 #include "entity/SSConfig.h"
 
-namespace Ui
-{
-class EditDialog;
-}
+QT_BEGIN_NAMESPACE
+namespace Ui { class EditDialog; }
+QT_END_NAMESPACE
 
 class EditDialog : public QDialog
 {
@@ -16,7 +14,7 @@ class EditDialog : public QDialog
 public:
     // config.id == 0 means new config.
     explicit EditDialog(SSConfig &config, QWidget *parent = nullptr);
-    ~EditDialog();
+    ~EditDialog() override;
 
 private:
     Ui::EditDialog *ui;
@@ -24,4 +22,4 @@ private:
     void onSave();
 };
 
-#endif // EDITDIALOG_H
+#endif // EDIT_DIALOG_H

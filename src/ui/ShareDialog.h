@@ -1,13 +1,11 @@
-#ifndef SHAREDIALOG_H
-#define SHAREDIALOG_H
-
+#ifndef SHARE_DIALOG_H
+#define SHARE_DIALOG_H
 
 #include "entity/SSConfig.h"
 
-namespace Ui
-{
-class ShareDialog;
-}
+QT_BEGIN_NAMESPACE
+namespace Ui { class ShareDialog; }
+QT_END_NAMESPACE
 
 class ShareDialog : public QDialog
 {
@@ -15,10 +13,10 @@ class ShareDialog : public QDialog
 
 public:
     explicit ShareDialog(const SSConfig &config, QWidget *parent = nullptr);
-    ~ShareDialog();
+    ~ShareDialog() override;
 
 private:
     Ui::ShareDialog *ui;
 };
 
-#endif // SHAREDIALOG_H
+#endif // SHARE_DIALOG_H

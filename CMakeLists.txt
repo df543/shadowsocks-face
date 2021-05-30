@@ -36,16 +36,16 @@ add_executable(ss-face WIN32
     src/tools/latencytester.h
     src/tools/SingleInstanceDoorbell.h
     src/tools/QRMat.h
-    src/ui/custom/imagewidget.h
-    src/ui/editdialog.cpp
-    src/ui/editdialog.h
-    src/ui/editdialog.ui
+    src/ui/custom_widgets/ScalableImageWidget.h
+    src/ui/EditDialog.cpp
+    src/ui/EditDialog.h
+    src/ui/EditDialog.ui
     src/ui/MainWindow.cpp
     src/ui/MainWindow.h
     src/ui/MainWindow.ui
-    src/ui/sharedialog.cpp
-    src/ui/sharedialog.h
-    src/ui/sharedialog.ui)
+    src/ui/ShareDialog.cpp
+    src/ui/ShareDialog.h
+    src/ui/ShareDialog.ui)
 
 target_include_directories(ss-face PRIVATE src)
 target_precompile_headers(ss-face PRIVATE src/pch.h)

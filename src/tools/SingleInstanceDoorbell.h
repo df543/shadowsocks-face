@@ -1,5 +1,5 @@
-#ifndef SINGLEINSTANCEDOORBELL_H
-#define SINGLEINSTANCEDOORBELL_H
+#ifndef SINGLE_INSTANCE_DOORBELL_H
+#define SINGLE_INSTANCE_DOORBELL_H
 
 class SingleInstanceDoorbell: public QObject
 {
@@ -8,6 +8,7 @@ class SingleInstanceDoorbell: public QObject
 public:
     explicit SingleInstanceDoorbell(const QString &id, QObject *parent = nullptr):
         QObject(parent), id(id) {}
+
     ~SingleInstanceDoorbell() override
     { delete server; }
 
@@ -37,4 +38,4 @@ private:
     QLocalServer *server = nullptr;
 };
 
-#endif // SINGLEINSTANCEDOORBELL_H
+#endif // SINGLE_INSTANCE_DOORBELL_H

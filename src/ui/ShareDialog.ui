@@ -12,7 +12,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="ImageWidget" name="imageWidget" native="true">
+    <widget class="ScalableImageWidget" name="imageWidget" native="true">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
        <horstretch>0</horstretch>
@@ -41,9 +41,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>ImageWidget</class>
+   <class>ScalableImageWidget</class>
    <extends>QWidget</extends>
-   <header>ui/custom/imagewidget.h</header>
+   <header>ui/custom_widgets/ScalableImageWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

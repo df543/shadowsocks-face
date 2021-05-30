@@ -1,8 +1,8 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
-#include "editdialog.h"
-#include "sharedialog.h"
+#include "EditDialog.h"
+#include "ShareDialog.h"
 #include "global.h"
 #include "tools/latencytester.h"
 

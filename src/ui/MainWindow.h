@@ -1,5 +1,5 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef MAIN_WINDOW_H
+#define MAIN_WINDOW_H
 
 #include "data/configmanager.h"
 #include "sspm/processmanager.h"
@@ -67,4 +67,4 @@ protected slots:
     void closeEvent(QCloseEvent *e) override;
 };
 
-#endif // MAINWINDOW_H
+#endif // MAIN_WINDOW_H

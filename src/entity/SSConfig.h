@@ -1,5 +1,5 @@
-#ifndef SSCONFIG_H
-#define SSCONFIG_H
+#ifndef SS_CONFIG_H
+#define SS_CONFIG_H
 
 #include "tools/latencytester.h"
 
@@ -75,4 +75,4 @@ public:
     }
 };
 
-#endif // SSCONFIG_H
+#endif // SS_CONFIG_H
