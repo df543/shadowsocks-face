@@ -1,77 +1,136 @@
 #ifndef SS_CONFIG_H
 #define SS_CONFIG_H
 
-#include "tools/latencytester.h"
-
 class SSConfig
 {
 public:
     qint64 id = 0;
-    QString remarks;
+
+    QString method;
+    QString password;
     QString server_address;
-    int server_port;
+    int server_port = 0;
+    QString name;
+
     QString local_address = "127.0.0.1";
     int local_port = 1080;
-    QString password;
-    int timeout = 5;
-    QString method;
-    bool fastopen = false;
     QString mode = "tcp_only";
-    int latencyMs = NOTEST;
+    int timeout = 5;
+    bool fast_open = false;
 
     QString getName() const
     {
-        if (remarks.trimmed().isEmpty())
+        if (name.isEmpty())
             return QString("%1:%2").arg(server_address).arg(server_port);
-        else return remarks;
+        else return name;
     }
 
-    QString toUri() const
+    enum URIType {
+        ORIGINAL_BASE64,
+        SIP002
+    };
+
+    QString toURI(URIType uriType) const
     {
-        QString userInfo = QString("%1:%2").arg(method, password).toUtf8().toBase64();
-        QString res = QString("ss://%1@%2:%3").arg(userInfo, server_address).arg(server_port);
-        if (!remarks.trimmed().isEmpty())
-            res += "#" + remarks.toUtf8().toPercentEncoding();
-        return res;
+        QString tag_part = name.isEmpty() ? "" : '#' + name.toUtf8().toPercentEncoding();
+
+        switch (uriType) {
+        case ORIGINAL_BASE64: {
+            QString content = QString("%1:%2@%3:%4").arg(method, password, server_address).arg(server_port);
+            QString content_base64 = content.toUtf8().toBase64(QByteArray::OmitTrailingEquals);
+            return QString("ss://%1%2").arg(content_base64, tag_part);
+        }
+        case SIP002: {
+            QString userInfo = QString("%1:%2").arg(method, password);
+            QString userInfo_base64 = userInfo.toUtf8().toBase64(QByteArray::Base64UrlEncoding | QByteArray::OmitTrailingEquals);
+            return QString("ss://%1@%2:%3%4").arg(userInfo_base64, server_address).arg(server_port).arg(tag_part);
+        }
+        default:
+            throw std::runtime_error("internal error: unknown URI type");
+        }
     }
 
-    QString fileName() const
+    static SSConfig fromURI(const QString &s)
     {
-        return QString("%1.json").arg(id);
+        QRegularExpression original_base64_pattern(QRegularExpression::anchoredPattern("ss://([A-Za-z0-9+/]*=*)(#.*)?"));
+        QRegularExpression sip002_pattern(QRegularExpression::anchoredPattern("ss://([A-Za-z0-9-_]*=*)@(.*?):(\\d*)/?.*?(#.*)?"));
+
+        if (auto match = original_base64_pattern.match(s); match.hasMatch()) {
+            SSConfig res;
+
+            QString content_base64 = match.captured(1);
+            QString content = QByteArray::fromBase64(content_base64.toUtf8());
+            QRegularExpression content_pattern(QRegularExpression::anchoredPattern("(.*?):(.*)@(.*):(\\d*)"));
+            auto content_match = content_pattern.match(content);
+            if (content_match.lastCapturedIndex() != 4)
+                goto ORIGINAL_BASE64_FAILED;
+            res.method = content_match.captured(1);
+            res.password = content_match.captured(2);
+            res.server_address = content_match.captured(3);
+            res.server_port = content_match.captured(4).toInt();
+
+            QString tag_part = match.captured(2);
+            res.name = QByteArray::fromPercentEncoding(tag_part.right(tag_part.size() - 1).toUtf8());
+
+            return res;
+        }
+ORIGINAL_BASE64_FAILED:
+
+        if (auto match = sip002_pattern.match(s); match.hasMatch()) {
+            SSConfig res;
+
+            QString userInfo_base64 = match.captured(1);
+            QString userInfo = QByteArray::fromBase64(userInfo_base64.toUtf8(), QByteArray::Base64UrlEncoding);
+            QRegularExpression userInfo_pattern(QRegularExpression::anchoredPattern("(.*?):(.*)"));
+            auto userInfo_match = userInfo_pattern.match(userInfo);
+            if (userInfo_match.lastCapturedIndex() != 2)
+                goto SIP002_FAILED;
+            res.method = userInfo_match.captured(1);
+            res.password = userInfo_match.captured(2);
+
+            res.server_address = match.captured(2);
+            res.server_port = match.captured(3).toInt();
+
+            QString tag_part = match.captured(4);
+            res.name = QByteArray::fromPercentEncoding(tag_part.right(tag_part.size() - 1).toUtf8());
+
+            return res;
+        }
+SIP002_FAILED:
+
+        throw std::invalid_argument("incorrect uri");
     }
 
     QJsonObject toJsonObject() const
     {
-        QJsonObject ret;
-        ret["id"] = id;
-        ret["remarks"] = remarks;
-        ret["server"] = server_address;
-        ret["server_port"] = server_port;
-        ret["local_address"] = local_address;
-        ret["local_port"] = local_port;
-        ret["password"] = password;
-        ret["timeout"] = timeout;
-        ret["method"] = method;
-        ret["fastopen"] = fastopen;
-        ret["mode"] = mode;
-        return ret;
+        QJsonObject res;
+        res["server"] = server_address;
+        res["server_port"] = server_port;
+        res["local_address"] = local_address;
+        res["local_port"] = local_port;
+        res["password"] = password;
+        res["method"] = method;
+        res["mode"] = mode;
+        res["timeout"] = timeout;
+        res["fast_open"] = fast_open;
+        res["remarks"] = name;
+        return res;
     }
 
     static SSConfig fromJsonObject(const QJsonObject &json)
     {
-        SSConfig ret;
-        if (json.contains("id")) ret.id = json["id"].toInt();
-        ret.remarks = json["remarks"].toString();
-        ret.server_address = json["server"].toString();
-        ret.server_port = json["server_port"].toInt();
-        if (json.contains("local_address")) ret.local_address = json["local_address"].toString();
-        if (json.contains("local_port")) ret.local_port = json["local_port"].toInt();
-        ret.password = json["password"].toString();
-        if (json.contains("timeout")) ret.timeout = json["timeout"].toInt();
-        ret.method = json["method"].toString();
-        if (json.contains("fastopen")) ret.fastopen = json["fastopen"].toBool();
-        if (json.contains("mode")) ret.mode = json["mode"].toString();
-        return ret;
+        SSConfig res;
+        res.name            = json.contains("remarks")          ? json["remarks"].toString()        : res.name;
+        res.server_address  = json.contains("server")           ? json["server"].toString()         : res.server_address;
+        res.server_port     = json.contains("server_port")      ? json["server_port"].toInt()       : res.server_port;
+        res.local_address   = json.contains("local_address")    ? json["local_address"].toString()  : res.local_address;
+        res.local_port      = json.contains("local_port")       ? json["local_port"].toInt()        : res.local_port;
+        res.password        = json.contains("password")         ? json["password"].toString()       : res.password;
+        res.method          = json.contains("method")           ? json["method"].toString()         : res.method;
+        res.mode            = json.contains("mode")             ? json["mode"].toString()           : res.mode;
+        res.timeout         = json.contains("timeout")          ? json["timeout"].toInt()           : res.timeout;
+        res.fast_open       = json.contains("fast_open")        ? json["fast_open"].toBool()        : res.fast_open;
+        return res;
     }
 };
 

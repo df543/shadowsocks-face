@@ -9,7 +9,7 @@ EditDialog::EditDialog(SSConfig &config, QWidget *parent)
     if (config.id == 0) setWindowTitle(tr("New"));
     else setWindowTitle(tr("Edit"));
 
-    ui->lineEdit_name->setText(config.remarks);
+    ui->lineEdit_name->setText(config.name);
     ui->lineEdit_serverAddr->setText(config.server_address);
     ui->spinBox_serverPort->setValue(config.server_port);
     ui->comboBox_method->setCurrentText(config.method);
@@ -18,7 +18,7 @@ EditDialog::EditDialog(SSConfig &config, QWidget *parent)
     ui->spinBox_localPort->setValue(config.local_port);
     ui->spinBox_timeout->setValue(config.timeout);
     ui->comboBox_mode->setCurrentText(config.mode);
-    ui->checkBox_fastopen->setChecked(config.fastopen);
+    ui->checkBox_fastopen->setChecked(config.fast_open);
 
     connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &EditDialog::onSave);
 }
@@ -47,7 +47,7 @@ void EditDialog::onSave()
     } else ui->comboBox_mode->setStyleSheet("background-color:");
     if (!valid) return;
 
-    config.remarks = ui->lineEdit_name->text();
+    config.name = ui->lineEdit_name->text();
     config.server_address = ui->lineEdit_serverAddr->text();
     config.server_port = ui->spinBox_serverPort->value();
     config.local_port = ui->spinBox_localPort->value();
@@ -55,7 +55,7 @@ void EditDialog::onSave()
     config.timeout = ui->spinBox_timeout->value();
     config.method = ui->comboBox_method->currentText();
     config.mode = ui->comboBox_mode->currentText();
-    config.fastopen = ui->checkBox_fastopen->isChecked();
+    config.fast_open = ui->checkBox_fastopen->isChecked();
     config.local_address = ui->lineEdit_localAddr->text();
 
     this->accept();

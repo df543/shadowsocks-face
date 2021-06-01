@@ -16,8 +16,8 @@ public slots:
     void remove(const SSConfig &config);
     void edit(const SSConfig &config);
     QList<SSConfig> query();
-    void importGUIConfig(QString guiConfigPath);
-    void exportGUIConfig(QString guiConfigPath);
+    void importGUIConfig(const QString &guiConfigPath);
+    void exportGUIConfig(const QString &guiConfigPath);
 
 private:
     QDir configDir;

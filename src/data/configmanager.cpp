@@ -14,7 +14,7 @@ ConfigManager::ConfigManager(QString dirPath, QObject *parent)
 
 void ConfigManager::saveConfig(const SSConfig &config)
 {
-    QFile jsonFile(configDir.filePath(config.fileName()));
+    QFile jsonFile(configDir.filePath(QString("%1.json").arg(config.id)));
     if (!jsonFile.open(QIODevice::WriteOnly))
         throw std::runtime_error("couldn't write file");
     jsonFile.write(QJsonDocument(config.toJsonObject()).toJson());
@@ -31,7 +31,7 @@ void ConfigManager::add(SSConfig &config)
 void ConfigManager::remove(const SSConfig &config)
 {
     configDir.refresh();
-    configDir.remove(config.fileName());
+    configDir.remove(QString("%1.json").arg(config.id));
 }
 
 void ConfigManager::edit(const SSConfig &config)
@@ -54,48 +54,28 @@ QList<SSConfig> ConfigManager::query()
     return ret;
 }
 
-void ConfigManager::importGUIConfig(QString guiConfigPath)
+void ConfigManager::importGUIConfig(const QString &guiConfigPath)
 {
-    QFile f{guiConfigPath};
+    QFile f(guiConfigPath);
     f.open(QIODevice::ReadOnly);
     QJsonObject json = QJsonDocument::fromJson(f.readAll()).object();
-    f.close();
-
-    int localPort = json.find("localPort")->toVariant().toInt();
-    if (localPort == 0) localPort = 1080;
-    bool shareOverLan = json.find("shareOverLan")->toBool();
     QJsonArray jsonConfigs = json.find("configs")->toArray();
 
     for (auto i : jsonConfigs) {
         SSConfig toAdd = SSConfig::fromJsonObject(i.toObject());
-        toAdd.local_port = localPort;
-        if (shareOverLan)
-            toAdd.local_address = "0.0.0.0";
         add(toAdd);
     }
 }
 
-void ConfigManager::exportGUIConfig(QString guiConfigPath)
+void ConfigManager::exportGUIConfig(const QString &guiConfigPath)
 {
     QJsonArray jsonConfigs;
-    for (const auto &i : query()) {
-        QJsonObject oneConfig;
-        oneConfig["method"] = i.method;
-        oneConfig["password"] = i.password;
-        oneConfig["server"] = i.server_address;
-        oneConfig["server_port"] = i.server_port;
-        oneConfig["remarks"] = i.remarks;
-        jsonConfigs.push_back(oneConfig);
-    }
-
+    for (const auto &i : query())
+        jsonConfigs.push_back(i.toJsonObject());
     QJsonObject json;
     json["configs"] = jsonConfigs;
-    json["localPort"] = 1080;
-    json["shareOverLan"] = false;
 
-    QFile f{guiConfigPath};
+    QFile f(guiConfigPath);
     f.open(QIODevice::WriteOnly);
     f.write(QJsonDocument{json}.toJson());
-    f.close();
 }
-

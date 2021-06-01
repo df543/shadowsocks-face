@@ -10,7 +10,10 @@ public:
         QWidget(parent) {}
 
     void setImage(const QImage &_image)
-    { this->image = _image; }
+    {
+        this->image = _image;
+        repaint();
+    }
 
 private:
     QImage image;

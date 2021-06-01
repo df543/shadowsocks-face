@@ -64,7 +64,7 @@ void MainWindow::testLatency(SSConfig &config)
         );
         connect(tester, &LatencyTester::testFinished, [&config, this](int latencyMs) {
             if (processManager->isRunning(config.id)) {
-                config.latencyMs = latencyMs;
+//                config.latencyMs = latencyMs;
                 sync();
             }
         });
@@ -80,10 +80,10 @@ void MainWindow::sync()
         ui->configTable->setItem(i, 0, new QTableWidgetItem(config.getName()));
 
         QString latency;
-        if (config.latencyMs == TIMEOUT)
-            latency = tr("timeout");
-        else if (config.latencyMs >= 0)
-            latency = QString("%1 ms").arg(config.latencyMs);
+//        if (config.latencyMs == TIMEOUT)
+//            latency = tr("timeout");
+//        else if (config.latencyMs >= 0)
+//            latency = QString("%1 ms").arg(config.latencyMs);
         ui->configTable->setItem(i, 1, new QTableWidgetItem(latency));
 
         QString local;
@@ -99,15 +99,15 @@ void MainWindow::sync()
 void MainWindow::reloadConfig()
 {
     // save latency
-    QHash<qint64, int> latency;
-    for (const auto &i : configData)
-        latency[i.id] = i.latencyMs;
+//    QHash<qint64, int> latency;
+//    for (const auto &i : configData)
+//        latency[i.id] = i.latencyMs;
     // reload
     configData = configManager->query();
     // restore latency
-    for (auto &i : configData)
-        if (latency.contains(i.id))
-            i.latencyMs = latency[i.id];
+//    for (auto &i : configData)
+//        if (latency.contains(i.id))
+//            i.latencyMs = latency[i.id];
     // refresh view
     sync();
 }
@@ -258,7 +258,7 @@ void MainWindow::on_actionShare_triggered()
 {
     int row = ui->configTable->currentRow();
     SSConfig &toShare = configData[row];
-    auto *shareDialog = new ShareDialog{toShare, this};
+    auto *shareDialog = new ShareDialog(toShare, this);
     shareDialog->show();
 }
 
@@ -352,42 +352,13 @@ void MainWindow::on_actionPaste_triggered()
 {
     QClipboard *clipboard = QGuiApplication::clipboard();
     QString s = clipboard->text();
-    s = s.trimmed().replace("/?#", "#");
 
-    QRegExp sip001("ss://(.+)");
-    QRegExp sip002("ss://(.+)@(.+):(\\d+)(#.+)?");
-    QString name;
     SSConfig toAdd;
-    if (sip002.exactMatch(s)) {
-        name = sip002.cap(4);
-        toAdd.server_address = sip002.cap(2);
-        toAdd.server_port = sip002.cap(3).toInt();
-        QString hostinfo = QByteArray::fromBase64(sip002.cap(1).toUtf8());
-        QRegExp reg("(.+):(.+)");
-        reg.indexIn(hostinfo);
-        toAdd.method = reg.cap(1);
-        toAdd.password = reg.cap(2);
-    } else if (sip001.exactMatch(s)) {
-        QString info = sip001.cap(1);
-        if (info.contains('#')) {
-            int i = info.indexOf('#');
-            name = info.right(info.size() - i - 1);
-            info = info.left(i);
-        }
-        info = QByteArray::fromBase64(info.toUtf8());
-        QRegExp reg("(.+):(.+)@(.+):(\\d+)");
-        reg.indexIn(info);
-        toAdd.method = reg.cap(1);
-        toAdd.password = reg.cap(2);
-        toAdd.server_address = reg.cap(3);
-        toAdd.server_port = reg.cap(4).toInt();
-    } else
+    try {
+        toAdd = SSConfig::fromURI(s);
+    } catch (const std::invalid_argument &) {
         return;
-
-    if (name.startsWith("#"))
-        name = name.right(name.size() - 1);
-    name = QByteArray::fromPercentEncoding(name.toUtf8());
-    toAdd.remarks = name;
+    }
 
     EditDialog editDialog(toAdd, this);
     if (editDialog.exec() == QDialog::Accepted) {

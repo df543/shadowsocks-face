@@ -4,13 +4,23 @@
 #include "tools/QRMat.h"
 
 ShareDialog::ShareDialog(const SSConfig &config, QWidget *parent):
-    QDialog(parent), ui(new Ui::ShareDialog)
+    QDialog(parent), ui(new Ui::ShareDialog), config(config)
 {
     ui->setupUi(this);
-    setWindowTitle(tr("Share '%1'").arg(config.remarks));
     ui->textBrowser->setWordWrapMode(QTextOption::WrapAnywhere);
 
-    QString uri = config.toUri();
+    QString title = config.name.isEmpty() ? tr("<Unnamed Config>") : config.name;
+    ui->label_Name->setText(title);
+
+    ui->radioButton_Base64->setChecked(true);
+}
+
+ShareDialog::~ShareDialog()
+{ delete ui; }
+
+void ShareDialog::updateURI(SSConfig::URIType uriType)
+{
+    QString uri = config.toURI(uriType);
     ui->textBrowser->setText(uri);
 
     auto qr = QRMat(uri);
@@ -22,5 +32,14 @@ ShareDialog::ShareDialog(const SSConfig &config, QWidget *parent):
     ui->imageWidget->setImage(qrImage);
 }
 
-ShareDialog::~ShareDialog()
-{ delete ui; }
+void ShareDialog::on_radioButton_Base64_toggled(bool checked)
+{
+    if (checked)
+        updateURI(SSConfig::URIType::ORIGINAL_BASE64);
+}
+
+void ShareDialog::on_radioButton_SIP002_toggled(bool checked)
+{
+    if (checked)
+        updateURI(SSConfig::URIType::SIP002);
+}

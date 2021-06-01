@@ -17,6 +17,12 @@ public:
 
 private:
     Ui::ShareDialog *ui;
+    SSConfig config;
+
+private slots:
+    void updateURI(SSConfig::URIType uriType);
+    void on_radioButton_Base64_toggled(bool checked);
+    void on_radioButton_SIP002_toggled(bool checked);
 };
 
 #endif // SHARE_DIALOG_H
