@@ -11,16 +11,16 @@ int main(int argc, char *argv[])
     a.setApplicationVersion(global::version);
 
     QTranslator translator(&a);
-    translator.load(QLocale::system(), "", "", ":/translations");
-    a.installTranslator(&translator);
+    if (translator.load(QLocale::system(), "", "", ":/translations"))
+        a.installTranslator(&translator);
 
     MainWindow w;
     if (!w.isHideFirst())
         w.show();
 
-    SingleInstanceDoorbell onceguard(a.applicationName());
-    QObject::connect(&onceguard, &SingleInstanceDoorbell::rang, &w, &MainWindow::focus);
-    if (!onceguard.setup()) {
+    SingleInstanceDoorbell doorbell(a.applicationName());
+    QObject::connect(&doorbell, &SingleInstanceDoorbell::rang, &w, &MainWindow::focus);
+    if (!doorbell.setup()) {
         std::cerr << "Found another instance, the program is quiting.\n";
         return 2;
     }
