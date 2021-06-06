@@ -7,6 +7,7 @@
 #include <stdexcept>
 
 // qt core
+#include <QAbstractTableModel>
 #include <QByteArray>
 #include <QChar>
 #include <QDateTime>

@@ -10,31 +10,47 @@ MainWindow::MainWindow(QWidget *parent):
     QMainWindow(parent), ui(new Ui::MainWindow),
     dirPath(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation))
 {
-    if (!test_client()) {
-        QMessageBox::critical(this, tr("Start Error"), tr("Failed to start ss-local process. Please check shadowsocks-libev installation."));
-        QApplication::exit(1);
-    }
-
     ui->setupUi(this);
     setWindowTitle(global::name);
     ui->configTable->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-    connect(ui->configTable, &QTableWidget::itemSelectionChanged, this, &MainWindow::checkCurrentRow);
+    connect(ui->configTable, &QTableWidget::itemSelectionChanged, this, &MainWindow::checkStatus);
+
+    ui->tableViewConnections->setModel(&connectionModel);
+    connect(ui->tableViewConnections->selectionModel(), &QItemSelectionModel::selectionChanged, this, &MainWindow::checkStatus);
+
+    connect(&connectionModel, &ConnectionModel::output, [this](const SSConfig & config, ConnectionModel::OutputType outputType, QString msg) {
+        QString textStyle;
+        switch (outputType) {
+        case ConnectionModel::OutputType::STDOUT:
+            textStyle += "color:DimGray;";
+            break;
+        case ConnectionModel::OutputType::STDERR:
+            textStyle += "color:BlueViolet;";
+            break;
+        default:
+            throw std::runtime_error("unknown process output type");
+        }
+        auto logEntry = QString("<b>%1</b><br>"
+                                "<span style='%2'>%3</span>")
+                        .arg(config.getName(), textStyle, msg.replace("\n", "<br>"));
+        ui->textBrowserLog->append(logEntry);
+    });
 
     if (!QDir(dirPath).mkpath("."))
         throw std::runtime_error("couldn't create config dir");
     configManager = new ConfigManager(dirPath, this);
-    processManager = new ProcessManager(dirPath, this);
-    connect(processManager, &ProcessManager::procChanged, this, &MainWindow::saveAutoConnect);
-    connect(processManager, &ProcessManager::procChanged, this, &MainWindow::sync);
 
     reloadConfig();
     loadAutoConnect();
     sync();
-    checkCurrentRow();
+    checkStatus();
 
     connect(ui->configTable, &QTableWidget::itemDoubleClicked, ui->actionEdit, &QAction::triggered);
-    for (auto i : ui->mainToolBar->actions())
+
+    for (auto i : ui->toolBarConfig->actions())
         ui->configTable->addAction(i);
+    for (auto i : ui->toolBarConnection->actions())
+        ui->tableViewConnections->addAction(i);
 
     systray.setIcon(QIcon(":/icon/this"));
     auto *systrayMenu = new QMenu(this);
@@ -56,20 +72,20 @@ void MainWindow::focus()
 
 void MainWindow::testLatency(SSConfig &config)
 {
-    if (processManager->isRunning(config.id)) {
-        auto *tester = new LatencyTester(
-            QNetworkProxy(QNetworkProxy::Socks5Proxy, config.local_address, config.local_port),
-            QUrl("https://google.com"),
-            this
-        );
-        connect(tester, &LatencyTester::testFinished, [&config, this](int latencyMs) {
-            if (processManager->isRunning(config.id)) {
+//    if (processManager->isRunning(config.id)) {
+//        auto *tester = new LatencyTester(
+//            QNetworkProxy(QNetworkProxy::Socks5Proxy, config.local_address, config.local_port),
+//            QUrl("https://google.com"),
+//            this
+//        );
+//        connect(tester, &LatencyTester::testFinished, [&config, this](int latencyMs) {
+//            if (processManager->isRunning(config.id)) {
 //                config.latencyMs = latencyMs;
-                sync();
-            }
-        });
-        tester->start();
-    }
+//                sync();
+//            }
+//        });
+//        tester->start();
+//    }
 }
 
 void MainWindow::sync()
@@ -90,8 +106,6 @@ void MainWindow::sync()
         if (config.local_address != "127.0.0.1") local += config.local_address + ":";
         local += QString::number(config.local_port);
         ui->configTable->setItem(i, 2, new QTableWidgetItem(local));
-        if (processManager->isRunning(config.id))
-            setRow(i, true);
     }
     ui->configTable->clearSelection();
 }
@@ -112,93 +126,48 @@ void MainWindow::reloadConfig()
     sync();
 }
 
-void MainWindow::setRow(int row, bool bold)
+void MainWindow::checkStatus()
 {
-    QFont font;
-    font.setBold(bold);
-    for (int i = 0; i < 3; i++)
-        ui->configTable->item(row, i)->setFont(font);
-}
+    bool configSelected = !ui->configTable->selectedRanges().empty();
+    ui->actionConnect->setEnabled(configSelected);
+    ui->actionEdit->setEnabled(configSelected);
+    ui->actionRemove->setEnabled(configSelected);
+    ui->actionShare->setEnabled(configSelected);
 
-void MainWindow::checkCurrentRow()
-{
-    if (!ui->configTable->selectedRanges().empty()) {
-        int row = ui->configTable->currentRow();
-        qint64 id = configData[row].id;
-        bool connected = processManager->isRunning(id);
-        ui->actionConnect->setEnabled(!connected);
-        ui->actionDisconnect->setEnabled(connected);
-        ui->actionEdit->setEnabled(!connected);
-        ui->actionRemove->setEnabled(!connected);
-        ui->actionShare->setEnabled(true);
-        ui->actionTestLatency->setEnabled(connected);
-    } else {
-        ui->actionConnect->setEnabled(false);
-        ui->actionDisconnect->setEnabled(false);
-        ui->actionEdit->setEnabled(false);
-        ui->actionRemove->setEnabled(false);
-        ui->actionShare->setEnabled(false);
-        ui->actionTestLatency->setEnabled(false);
-    }
-}
-
-void MainWindow::startConfig(SSConfig &config)
-{
-    auto p = processManager->start(config.id);
-    if (p) {
-        connect(p, &QProcess::readyReadStandardOutput, [this, config, p] {
-            ui->logArea->append(
-                "<b>" + config.getName() + "</b><br>"
-                "<span style='color:DimGray'>" + QString(p->readAllStandardOutput()).replace("\n", "<br>") + "</span>"
-            );
-        });
-        connect(p, &QProcess::readyReadStandardError, [this, config, p] {
-            ui->logArea->append(
-                "<b>" + config.getName() + "</b><br>"
-                "<span style='color:BlueViolet'>" + QString(p->readAllStandardError()).replace("\n", "<br>") + "</span>"
-            );
-        });
-    } else {
-        ui->logArea->append(
-            "<b>" + config.getName() + "</b><br />"
-            "<span style='color:Red'>Failed to start</span>"
-        );
-    }
-
-    QTimer::singleShot(100, [&config, this] {
-        testLatency(config);
-    });
+    bool connectionSelected = ui->tableViewConnections->selectionModel()->hasSelection();
+    ui->actionDisconnect->setEnabled(connectionSelected);
+    ui->actionTestLatency->setEnabled(connectionSelected);
 }
 
 void MainWindow::loadAutoConnect()
 {
-    QFile f{QDir{dirPath}.filePath("last_connected.txt")};
-    QSet<qint64> startIds;
-    if (f.open(QIODevice::ReadOnly)) {
-        QTextStream in(&f);
-        for (;;) {
-            QString line = in.readLine();
-            if (line.isNull()) break;
-            else startIds.insert(line.toInt());
-        }
-        f.close();
-    }
-    if (!startIds.empty()) hideFirst = true;
-    for (auto &i : configData)
-        if (startIds.contains(i.id))
-            startConfig(i);
+//    QFile f{QDir{dirPath}.filePath("last_connected.txt")};
+//    QSet<qint64> startIds;
+//    if (f.open(QIODevice::ReadOnly)) {
+//        QTextStream in(&f);
+//        for (;;) {
+//            QString line = in.readLine();
+//            if (line.isNull()) break;
+//            else startIds.insert(line.toInt());
+//        }
+//        f.close();
+//    }
+//    if (!startIds.empty()) hideFirst = true;
+//    for (auto &i : configData)
+//        if (startIds.contains(i.id))
+//            startConfig(i);
 }
 
 void MainWindow::saveAutoConnect()
 {
-    QFile f{QDir{dirPath}.filePath("last_connected.txt")};
-    if (f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-        QTextStream out(&f);
-        for (const auto &i : configData)
-            if (processManager->isRunning(i.id))
-                out << i.id << "\n";
-        f.close();
-    }
+//    QFile f{QDir{dirPath}.filePath("last_connected.txt")};
+//    if (f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+//        QTextStream out(&f);
+//        for (const auto &i : configData)
+//            if (processManager->isRunning(i.id))
+//                out << i.id << "\n";
+//        f.close();
+//    }
 }
 
 void MainWindow::closeEvent(QCloseEvent *e)
@@ -216,41 +185,23 @@ void MainWindow::on_actionConnect_triggered()
     int row = ui->configTable->currentRow();
     SSConfig &toConnect = configData[row];
 
-    // check port use
-    for (const auto &i : configData)
-        if (i.id != toConnect.id && i.local_port == toConnect.local_port && processManager->isRunning(i.id)) {
-            if (QMessageBox::question(
-                    this,
-                    tr("Port repeat"),
-                    tr("Port %1 already used by config '%2', kill it?").arg(i.local_port).arg(i.getName()),
-                    QMessageBox::StandardButtons(QMessageBox::Yes | QMessageBox::No),
-                    QMessageBox::Yes
-                ) == QMessageBox::Yes) {
-                processManager->terminate(i.id);
-                break;
-            } else return;
-        }
-
-    startConfig(toConnect);
+    connectionModel.add(toConnect);
 }
 
 void MainWindow::on_actionDisconnect_triggered()
 {
-    int row = ui->configTable->currentRow();
-    qint64 id = configData[row].id;
-    processManager->terminate(id);
+    connectionModel.del(ui->tableViewConnections->selectionModel()->selection().indexes().at(0));
 }
 
 void MainWindow::on_actionEdit_triggered()
 {
     int row = ui->configTable->currentRow();
     SSConfig &toEdit = configData[row];
-    if (!processManager->isRunning(toEdit.id)) {
-        EditDialog editDialog(toEdit, this);
-        if (editDialog.exec() == QDialog::Accepted) {
-            configManager->edit(toEdit);
-            sync();
-        }
+
+    EditDialog editDialog(toEdit, this);
+    if (editDialog.exec() == QDialog::Accepted) {
+        configManager->edit(toEdit);
+        sync();
     }
 }
 

@@ -30,8 +30,8 @@ add_executable(ss-face WIN32
     src/data/configmanager.cpp
     src/data/configmanager.h
     src/entity/SSConfig.h
-    src/sspm/processmanager.cpp
-    src/sspm/processmanager.h
+    src/entity/SSConnection.h
+    src/model/ConnectionModel.h
     src/tools/latencytester.cpp
     src/tools/latencytester.h
     src/tools/SingleInstanceDoorbell.h

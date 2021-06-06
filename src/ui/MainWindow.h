@@ -2,7 +2,7 @@
 #define MAIN_WINDOW_H
 
 #include "data/configmanager.h"
-#include "sspm/processmanager.h"
+#include "model/ConnectionModel.h"
 #include "global.h"
 
 QT_BEGIN_NAMESPACE
@@ -25,25 +25,17 @@ public slots:
 private:
     Ui::MainWindow *ui;
     ConfigManager *configManager;
-    ProcessManager *processManager;
-    void setRow(int row, bool bold);
     QSystemTrayIcon systray;
     bool hideFirst = false;
-    void startConfig(SSConfig &config); // update latency
     void testLatency(SSConfig &config);
     QList<SSConfig> configData;
     QString dirPath;
-    bool test_client() {
-        QProcess test(this);
-        test.start("ss-local", QStringList());
-        test.waitForFinished();
-        return test.error() != QProcess::FailedToStart;
-    }
+    ConnectionModel connectionModel{this};
 
 private slots:
     void sync();
     void reloadConfig();
-    void checkCurrentRow();
+    void checkStatus();
     void loadAutoConnect();
     void saveAutoConnect();
 
