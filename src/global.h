@@ -17,6 +17,14 @@ inline QVariantHash settings{
     {"ss_command_type", "json_file"}
 };
 
+inline QString savePath()
+{
+    QString res = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+    if (!QDir(res).mkpath("."))
+        throw std::runtime_error("cannot create config path");
+    return res;
+}
+
 }
 
 #endif // GLOBAL_H

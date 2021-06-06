@@ -7,8 +7,7 @@
 #include "tools/latencytester.h"
 
 MainWindow::MainWindow(QWidget *parent):
-    QMainWindow(parent), ui(new Ui::MainWindow),
-    dirPath(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation))
+    QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     setWindowTitle(global::name);
@@ -36,9 +35,7 @@ MainWindow::MainWindow(QWidget *parent):
         ui->textBrowserLog->append(logEntry);
     });
 
-    if (!QDir(dirPath).mkpath("."))
-        throw std::runtime_error("couldn't create config dir");
-    configManager = new ConfigManager(dirPath, this);
+    configManager = new ConfigManager(global::savePath(), this);
 
     reloadConfig();
     loadAutoConnect();

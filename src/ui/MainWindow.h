@@ -29,7 +29,6 @@ private:
     bool hideFirst = false;
     void testLatency(SSConfig &config);
     QList<SSConfig> configData;
-    QString dirPath;
     ConnectionModel connectionModel{this};
 
 private slots:
