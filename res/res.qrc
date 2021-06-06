@@ -1,24 +1,24 @@
 <RCC>
-    <qresource prefix="/icon">
-        <file alias="this">../ss-face.png</file>
-    </qresource>
-    <qresource prefix="/translations">
+    <qresource prefix="/i18n">
         <file alias="zh_CN">i18n/zh_CN.qm</file>
     </qresource>
     <qresource prefix="/icons">
-        <file alias="application-exit">icons/application-exit.png</file>
-        <file alias="document-edit">icons/document-edit.png</file>
-        <file alias="document-export">icons/document-export.png</file>
-        <file alias="document-import">icons/document-import.png</file>
-        <file alias="document-share">icons/document-share.png</file>
-        <file alias="edit-guides">icons/edit-guides.png</file>
-        <file alias="help-about">icons/help-about.png</file>
-        <file alias="list-add">icons/list-add.png</file>
-        <file alias="list-remove">icons/list-remove.png</file>
-        <file alias="network-connect">icons/network-connect.png</file>
-        <file alias="network-disconnect">icons/network-disconnect.png</file>
-        <file alias="view-refresh">icons/view-refresh.png</file>
-        <file alias="edit-paste">icons/edit-paste.png</file>
-        <file alias="flag-green">icons/flag-green.png</file>
+        <file alias="app">../ss-face.png</file>
+    </qresource>
+    <qresource prefix="/icons/actions">
+        <file alias="application-exit">action-icons/application-exit.png</file>
+        <file alias="document-edit">action-icons/document-edit.png</file>
+        <file alias="document-export">action-icons/document-export.png</file>
+        <file alias="document-import">action-icons/document-import.png</file>
+        <file alias="document-share">action-icons/document-share.png</file>
+        <file alias="edit-guides">action-icons/edit-guides.png</file>
+        <file alias="help-about">action-icons/help-about.png</file>
+        <file alias="list-add">action-icons/list-add.png</file>
+        <file alias="list-remove">action-icons/list-remove.png</file>
+        <file alias="network-connect">action-icons/network-connect.png</file>
+        <file alias="network-disconnect">action-icons/network-disconnect.png</file>
+        <file alias="view-refresh">action-icons/view-refresh.png</file>
+        <file alias="edit-paste">action-icons/edit-paste.png</file>
+        <file alias="flag-green">action-icons/flag-green.png</file>
     </qresource>
 </RCC>

@@ -12,7 +12,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="../../res/res.qrc">
-    <normaloff>:/icon/this</normaloff>:/icon/this</iconset>
+    <normaloff>:/icons/app</normaloff>:/icons/app</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -210,7 +210,7 @@
   <action name="actionConnect">
    <property name="icon">
     <iconset resource="../../res/res.qrc">
-     <normaloff>:/icons/network-connect</normaloff>:/icons/network-connect</iconset>
+     <normaloff>:/icons/actions/network-connect</normaloff>:/icons/actions/network-connect</iconset>
    </property>
    <property name="text">
     <string>&amp;Connect</string>
@@ -222,7 +222,7 @@
   <action name="actionDisconnect">
    <property name="icon">
     <iconset resource="../../res/res.qrc">
-     <normaloff>:/icons/network-disconnect</normaloff>:/icons/network-disconnect</iconset>
+     <normaloff>:/icons/actions/network-disconnect</normaloff>:/icons/actions/network-disconnect</iconset>
    </property>
    <property name="text">
     <string>&amp;Disconnect</string>
@@ -234,7 +234,7 @@
   <action name="actionEdit">
    <property name="icon">
     <iconset resource="../../res/res.qrc">
-     <normaloff>:/icons/document-edit</normaloff>:/icons/document-edit</iconset>
+     <normaloff>:/icons/actions/document-edit</normaloff>:/icons/actions/document-edit</iconset>
    </property>
    <property name="text">
     <string>&amp;Edit</string>
@@ -246,7 +246,7 @@
   <action name="actionShare">
    <property name="icon">
     <iconset resource="../../res/res.qrc">
-     <normaloff>:/icons/document-share</normaloff>:/icons/document-share</iconset>
+     <normaloff>:/icons/actions/document-share</normaloff>:/icons/actions/document-share</iconset>
    </property>
    <property name="text">
     <string>&amp;Share</string>
@@ -258,7 +258,7 @@
   <action name="actionImport">
    <property name="icon">
     <iconset resource="../../res/res.qrc">
-     <normaloff>:/icons/document-import</normaloff>:/icons/document-import</iconset>
+     <normaloff>:/icons/actions/document-import</normaloff>:/icons/actions/document-import</iconset>
    </property>
    <property name="text">
     <string>&amp;Import from gui-config.json</string>
@@ -270,7 +270,7 @@
   <action name="actionExport">
    <property name="icon">
     <iconset resource="../../res/res.qrc">
-     <normaloff>:/icons/document-export</normaloff>:/icons/document-export</iconset>
+     <normaloff>:/icons/actions/document-export</normaloff>:/icons/actions/document-export</iconset>
    </property>
    <property name="text">
     <string>&amp;Export to gui-config.json</string>
@@ -282,7 +282,7 @@
   <action name="actionQuit">
    <property name="icon">
     <iconset resource="../../res/res.qrc">
-     <normaloff>:/icons/application-exit</normaloff>:/icons/application-exit</iconset>
+     <normaloff>:/icons/actions/application-exit</normaloff>:/icons/actions/application-exit</iconset>
    </property>
    <property name="text">
     <string>&amp;Quit</string>
@@ -294,7 +294,7 @@
   <action name="actionAbout">
    <property name="icon">
     <iconset resource="../../res/res.qrc">
-     <normaloff>:/icons/help-about</normaloff>:/icons/help-about</iconset>
+     <normaloff>:/icons/actions/help-about</normaloff>:/icons/actions/help-about</iconset>
    </property>
    <property name="text">
     <string>&amp;About</string>
@@ -314,7 +314,7 @@
   <action name="actionManually">
    <property name="icon">
     <iconset resource="../../res/res.qrc">
-     <normaloff>:/icons/edit-guides</normaloff>:/icons/edit-guides</iconset>
+     <normaloff>:/icons/actions/edit-guides</normaloff>:/icons/actions/edit-guides</iconset>
    </property>
    <property name="text">
     <string>&amp;Manually</string>
@@ -326,7 +326,7 @@
   <action name="actionRemove">
    <property name="icon">
     <iconset resource="../../res/res.qrc">
-     <normaloff>:/icons/list-remove</normaloff>:/icons/list-remove</iconset>
+     <normaloff>:/icons/actions/list-remove</normaloff>:/icons/actions/list-remove</iconset>
    </property>
    <property name="text">
     <string>&amp;Remove</string>
@@ -341,7 +341,7 @@
   <action name="actionRefresh">
    <property name="icon">
     <iconset resource="../../res/res.qrc">
-     <normaloff>:/icons/view-refresh</normaloff>:/icons/view-refresh</iconset>
+     <normaloff>:/icons/actions/view-refresh</normaloff>:/icons/actions/view-refresh</iconset>
    </property>
    <property name="text">
     <string>Re&amp;fresh</string>
@@ -356,7 +356,7 @@
   <action name="actionPaste">
    <property name="icon">
     <iconset resource="../../res/res.qrc">
-     <normaloff>:/icons/edit-paste</normaloff>:/icons/edit-paste</iconset>
+     <normaloff>:/icons/actions/edit-paste</normaloff>:/icons/actions/edit-paste</iconset>
    </property>
    <property name="text">
     <string>&amp;Paste</string>
@@ -379,7 +379,7 @@
   <action name="actionTestLatency">
    <property name="icon">
     <iconset resource="../../res/res.qrc">
-     <normaloff>:/icons/flag-green</normaloff>:/icons/flag-green</iconset>
+     <normaloff>:/icons/actions/flag-green</normaloff>:/icons/actions/flag-green</iconset>
    </property>
    <property name="text">
     <string>Test Latency</string>

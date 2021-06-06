@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
     a.setApplicationVersion(global::version);
 
     QTranslator translator(&a);
-    if (translator.load(QLocale::system(), "", "", ":/translations"))
+    if (translator.load(QLocale::system(), "", "", ":/i18n"))
         a.installTranslator(&translator);
 
     MainWindow w;

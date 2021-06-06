@@ -52,7 +52,7 @@ MainWindow::MainWindow(QWidget *parent):
     for (auto i : ui->toolBarConnection->actions())
         ui->tableViewConnections->addAction(i);
 
-    systray.setIcon(QIcon(":/icon/this"));
+    systray.setIcon(QIcon(":/icons/app"));
     auto *systrayMenu = new QMenu(this);
     systrayMenu->addAction(ui->actionShow);
     systrayMenu->addAction(ui->actionQuit);
