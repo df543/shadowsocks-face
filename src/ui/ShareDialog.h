@@ -1,7 +1,7 @@
 #ifndef SHARE_DIALOG_H
 #define SHARE_DIALOG_H
 
-#include "entity/SSConfig.h"
+#include "data/entity/SSConfig.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class ShareDialog; }

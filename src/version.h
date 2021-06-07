@@ -1,3 +1,3 @@
-#ifndef VERSION
-#define VERSION "3.0.0-dev"
+#ifndef SS_FACE_APP_VERSION
+#define SS_FACE_APP_VERSION "3.0.0-dev"
 #endif

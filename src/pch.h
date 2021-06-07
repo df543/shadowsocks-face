@@ -2,6 +2,7 @@
 #define PCH_H
 
 // c++
+#include <algorithm>
 #include <exception>
 #include <iostream>
 #include <stdexcept>
@@ -44,5 +45,10 @@
 
 // qt network
 #include <QtNetwork>
+
+// qt sql
+#include <QSqlError>
+#include <QSqlQuery>
+#include <QSqlTableModel>
 
 #endif // PCH_H

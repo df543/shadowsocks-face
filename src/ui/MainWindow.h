@@ -1,9 +1,8 @@
 #ifndef MAIN_WINDOW_H
 #define MAIN_WINDOW_H
 
-#include "data/configmanager.h"
-#include "model/ConnectionModel.h"
-#include "global.h"
+#include "data/model/ConfigModel.h"
+#include "data/model/ConnectionModel.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -24,16 +23,13 @@ public slots:
 
 private:
     Ui::MainWindow *ui;
-    ConfigManager *configManager;
     QSystemTrayIcon systray;
     bool hideFirst = false;
     void testLatency(SSConfig &config);
-    QList<SSConfig> configData;
     ConnectionModel connectionModel{this};
+    ConfigModel configModel{this};
 
 private slots:
-    void sync();
-    void reloadConfig();
     void checkStatus();
     void loadAutoConnect();
     void saveAutoConnect();

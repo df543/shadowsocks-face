@@ -8,7 +8,7 @@ namespace global
 
 inline const QString name = "Shadowsocks Face";
 inline const QString abbr = "ss-face";
-inline const QString version = VERSION;
+inline const QString version = SS_FACE_APP_VERSION;
 
 inline QVariantHash settings{
     {"ss_client", "sslocal-rust"},

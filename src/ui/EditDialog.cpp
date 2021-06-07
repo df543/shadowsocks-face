@@ -1,13 +1,14 @@
 #include "EditDialog.h"
 #include "ui_EditDialog.h"
 
-EditDialog::EditDialog(SSConfig &config, QWidget *parent)
+EditDialog::EditDialog(const SSConfig &config, DialogType dialogType, QWidget *parent)
     : QDialog(parent), ui(new Ui::EditDialog), config(config)
 {
     ui->setupUi(this);
-
-    if (config.id == 0) setWindowTitle(tr("New"));
-    else setWindowTitle(tr("Edit"));
+    if (dialogType == DialogType::NEW_CONFIG)
+        setWindowTitle(tr("New"));
+    else if (dialogType == DialogType::EDIT_CONFIG)
+        setWindowTitle(tr("Edit"));
 
     ui->lineEdit_name->setText(config.name);
     ui->lineEdit_serverAddr->setText(config.server_address);
@@ -19,18 +20,15 @@ EditDialog::EditDialog(SSConfig &config, QWidget *parent)
     ui->spinBox_timeout->setValue(config.timeout);
     ui->comboBox_mode->setCurrentText(config.mode);
     ui->checkBox_fastopen->setChecked(config.fast_open);
-
-    connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &EditDialog::onSave);
 }
 
 EditDialog::~EditDialog()
-{
-    delete ui;
-}
+{ delete ui; }
 
-void EditDialog::onSave()
+void EditDialog::on_buttonBox_accepted()
 {
     bool valid = true;
+
     if (ui->lineEdit_serverAddr->text().size() == 0) {
         ui->lineEdit_serverAddr->setStyleSheet("background-color: pink");
         valid = false;
@@ -45,6 +43,7 @@ void EditDialog::onSave()
         ui->comboBox_mode->setStyleSheet("background-color: pink");
         valid = false;
     } else ui->comboBox_mode->setStyleSheet("background-color:");
+
     if (!valid) return;
 
     config.name = ui->lineEdit_name->text();
@@ -58,5 +57,6 @@ void EditDialog::onSave()
     config.fast_open = ui->checkBox_fastopen->isChecked();
     config.local_address = ui->lineEdit_localAddr->text();
 
+    emit saveConfig(config);
     this->accept();
 }

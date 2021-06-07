@@ -15,7 +15,7 @@ if (NOT DEFINED QT_VERSION)
     set(QT_VERSION 5)
 endif ()
 
-find_package(Qt${QT_VERSION} COMPONENTS Widgets LinguistTools Network REQUIRED)
+find_package(Qt${QT_VERSION} COMPONENTS Widgets LinguistTools Network Sql REQUIRED)
 
 set(TS_FILES
     res/i18n/zh_CN.ts)
@@ -27,11 +27,11 @@ add_executable(ss-face WIN32
     src/global.h
     src/main.cpp
     src/version.h
-    src/data/configmanager.cpp
-    src/data/configmanager.h
-    src/entity/SSConfig.h
-    src/entity/SSConnection.h
-    src/model/ConnectionModel.h
+    src/data/entity/SSConfig.h
+    src/data/entity/SSConnection.h
+    src/data/dao/SSConfigDAO.h
+    src/data/model/ConfigModel.h
+    src/data/model/ConnectionModel.h
     src/tools/latencytester.cpp
     src/tools/latencytester.h
     src/tools/SingleInstanceDoorbell.h
@@ -53,4 +53,5 @@ target_precompile_headers(ss-face PRIVATE src/pch.h)
 target_link_libraries(ss-face PRIVATE
     Qt::Widgets
     Qt::Network
+    Qt::Sql
     QR-Code-generator)

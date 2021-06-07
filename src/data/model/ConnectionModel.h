@@ -1,7 +1,7 @@
 #ifndef CONNECTION_MODEL_H
 #define CONNECTION_MODEL_H
 
-#include <entity/SSConnection.h>
+#include "data/entity/SSConnection.h"
 
 class ConnectionModel: public QAbstractTableModel
 {
@@ -9,7 +9,14 @@ class ConnectionModel: public QAbstractTableModel
 
 private:
     QList<SSConnection *> connections;
-    QStringList header = { tr("Name"), tr("Server"), tr("Local") };
+    QStringList header = { tr("Server"), tr("Local") };
+
+    bool checkIndex(const QModelIndex &i) const
+    {
+        return !i.parent().isValid()                                // parent is root
+               && i.row() >= 0 && i.row() < connections.size()      // row
+               && i.column() >= 0 && i.column() < header.size();    // column
+    }
 
 public:
     enum OutputType {
@@ -17,7 +24,7 @@ public:
     };
 
 signals:
-    void output(const SSConfig &config, OutputType outputType, const QString &msg);
+    void output(const SSConfig &config, ConnectionModel::OutputType outputType, const QString &msg);
 
 public slots:
     void add(const SSConfig &config)
@@ -37,15 +44,15 @@ public slots:
         connect(&connection->process, &QProcess::readyReadStandardError, [this, connection] {
             emit output(connection->ss_config, OutputType::STDERR, connection->process.readAllStandardError());
         });
-        connection->start();
         beginInsertRows(QModelIndex(), connections.size(), connections.size());
         connections.append(connection);
         endInsertRows();
+        connection->start();
     }
 
     void del(const QModelIndex &i)
     {
-        if (!i.parent().isValid() && i.row() >= 0 && i.row() < connections.size())
+        if (checkIndex(i))
             connections[i.row()]->terminate();
     }
 
@@ -68,21 +75,17 @@ public:
 
     QVariant data(const QModelIndex &index, int role) const override
     {
-        if (role == Qt::DisplayRole && !index.parent().isValid()
-            && index.column() >= 0 && index.column() < header.size()
-            && index.row() >= 0 && index.row() < connections.size()
-           ) {
+        if (checkIndex(index)) {
             const SSConfig &config = connections[index.row()]->ss_config;
             switch (index.column()) {
             case 0:
-                return config.name;
+                if (role == Qt::DisplayRole)
+                    return config.getName();
+                break;
             case 1:
-                return QString("%1:%2").arg(config.server_address).arg(config.server_port);
-            case 2:
-                if (config.local_address == "127.0.0.1")
-                    return config.local_port;
-                else
-                    return QString("%1:%2").arg(config.local_address).arg(config.local_port);
+                if (role == Qt::DisplayRole)
+                    return config.getLocal();
+                break;
             default:
                 throw std::runtime_error("unknown column");
             }

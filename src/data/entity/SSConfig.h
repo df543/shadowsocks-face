@@ -25,6 +25,14 @@ public:
         else return name;
     }
 
+    QString getLocal() const
+    {
+        if (local_address == "127.0.0.1")
+            return QString::number(local_port);
+        else
+            return QString("%1:%2").arg(local_address).arg(local_port);
+    }
+
     enum URIType {
         ORIGINAL_BASE64,
         SIP002
