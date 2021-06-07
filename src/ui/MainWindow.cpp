@@ -265,7 +265,7 @@ void MainWindow::on_actionAbout_triggered()
 void MainWindow::on_actionAboutQt_triggered()
 { QMessageBox::aboutQt(this); }
 
-void MainWindow::on_actionManually_triggered()
+void MainWindow::on_actionAddManually_triggered()
 {
     SSConfig toAdd;
     EditDialog editDialog(toAdd, this);
@@ -296,7 +296,7 @@ void MainWindow::on_actionRemove_triggered()
 void MainWindow::on_actionRefresh_triggered()
 { reloadConfig(); }
 
-void MainWindow::on_actionPaste_triggered()
+void MainWindow::on_actionAddFromURI_triggered()
 {
     QClipboard *clipboard = QGuiApplication::clipboard();
     QString s = clipboard->text();

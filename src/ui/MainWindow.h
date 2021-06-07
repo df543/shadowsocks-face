@@ -47,10 +47,10 @@ private slots:
     void on_actionQuit_triggered();
     void on_actionAbout_triggered();
     void on_actionAboutQt_triggered();
-    void on_actionManually_triggered();
+    void on_actionAddManually_triggered();
     void on_actionRemove_triggered();
     void on_actionRefresh_triggered();
-    void on_actionPaste_triggered();
+    void on_actionAddFromURI_triggered();
     void on_actionShow_triggered();
     void on_actionTestLatency_triggered();
 

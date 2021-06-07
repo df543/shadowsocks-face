@@ -100,8 +100,12 @@
      <property name="title">
       <string>Add</string>
      </property>
-     <addaction name="actionManually"/>
-     <addaction name="actionPaste"/>
+     <property name="icon">
+      <iconset resource="../../res/res.qrc">
+       <normaloff>:/icons/actions/list-add</normaloff>:/icons/actions/list-add</iconset>
+     </property>
+     <addaction name="actionAddManually"/>
+     <addaction name="actionAddFromURI"/>
     </widget>
     <addaction name="menuAdd"/>
     <addaction name="actionConnect"/>
@@ -167,7 +171,7 @@
   </widget>
   <widget class="QToolBar" name="toolBarConfig">
    <property name="windowTitle">
-    <string>toolBar</string>
+    <string>Config Toolbar</string>
    </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
@@ -183,7 +187,7 @@
   </widget>
   <widget class="QToolBar" name="toolBarConnection">
    <property name="windowTitle">
-    <string>toolBar_2</string>
+    <string>Connection Toolbar</string>
    </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
@@ -196,7 +200,7 @@
   </widget>
   <widget class="QToolBar" name="toolBarFile">
    <property name="windowTitle">
-    <string>toolBar_3</string>
+    <string>File Toolbar</string>
    </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
@@ -311,16 +315,16 @@
     <string>About Qt</string>
    </property>
   </action>
-  <action name="actionManually">
+  <action name="actionAddManually">
    <property name="icon">
     <iconset resource="../../res/res.qrc">
      <normaloff>:/icons/actions/edit-guides</normaloff>:/icons/actions/edit-guides</iconset>
    </property>
    <property name="text">
-    <string>&amp;Manually</string>
+    <string>Add Config Manually</string>
    </property>
    <property name="toolTip">
-    <string>Add connection manually</string>
+    <string>Add Config Manually</string>
    </property>
   </action>
   <action name="actionRemove">
@@ -353,16 +357,16 @@
     <string>F5</string>
    </property>
   </action>
-  <action name="actionPaste">
+  <action name="actionAddFromURI">
    <property name="icon">
     <iconset resource="../../res/res.qrc">
      <normaloff>:/icons/actions/edit-paste</normaloff>:/icons/actions/edit-paste</iconset>
    </property>
    <property name="text">
-    <string>&amp;Paste</string>
+    <string>Add Config From URI</string>
    </property>
    <property name="toolTip">
-    <string>Paste</string>
+    <string>Add Config From URI</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+V</string>
