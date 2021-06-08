@@ -136,8 +136,8 @@ void MainWindow::on_actionConnect_triggered()
 
 void MainWindow::on_actionDisconnect_triggered()
 {
-    auto i = ui->tableViewConfig->selectionModel()->selection().indexes().at(0);
-    connectionModel.del(i);
+    auto connection_index = ui->tableViewConnections->selectionModel()->selection().indexes().at(0);
+    connectionModel.del(connection_index);
 }
 
 void MainWindow::on_actionAddManually_triggered()
