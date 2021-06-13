@@ -34,7 +34,7 @@ add_executable(ss-face WIN32
     src/data/model/ConnectionModel.h
     src/tools/ProxyLatencyTester.h
     src/tools/SingleInstanceDoorbell.h
-    src/tools/QRMat.h
+    src/tools/QRMatrix.h
     src/ui/custom_widgets/ScalableImageWidget.h
     src/ui/EditDialog.cpp
     src/ui/EditDialog.h

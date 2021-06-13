@@ -1,7 +1,7 @@
 #include "ShareDialog.h"
 #include "ui_ShareDialog.h"
 
-#include "tools/QRMat.h"
+#include "tools/QRMatrix.h"
 
 ShareDialog::ShareDialog(const SSConfig &config, QWidget *parent):
     QDialog(parent), ui(new Ui::ShareDialog), config(config)
@@ -23,7 +23,7 @@ void ShareDialog::updateURI(SSConfig::URIType uriType)
     QString uri = config.toURI(uriType);
     ui->textBrowser->setText(uri);
 
-    auto qr = QRMat(uri);
+    auto qr = QRMatrix(uri);
     int size = qr.size();
     QImage qrImage(size, size, QImage::Format_Mono);
     for (int i = 0; i < size; i++)
