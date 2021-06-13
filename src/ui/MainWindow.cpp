@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent):
     connect(ui->tableViewConfig->selectionModel(),      &QItemSelectionModel::selectionChanged, this, &MainWindow::checkStatus);
     connect(ui->tableViewConnections->selectionModel(), &QItemSelectionModel::selectionChanged, this, &MainWindow::checkStatus);
     checkStatus();
-//    connect(ui->tableViewConfig, &QTableView::doubleClicked, ui->actionEdit, &QAction::triggered);
+    connect(ui->tableViewConfig, &QTableView::doubleClicked, ui->actionEdit, &QAction::trigger);
     for (auto i : ui->toolBarConfig->actions())
         ui->tableViewConfig->addAction(i);
     for (auto i : ui->toolBarConnection->actions())
