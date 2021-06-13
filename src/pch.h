@@ -6,6 +6,7 @@
 #include <exception>
 #include <iostream>
 #include <stdexcept>
+#include <utility>
 
 // qt core
 #include <QAbstractTableModel>

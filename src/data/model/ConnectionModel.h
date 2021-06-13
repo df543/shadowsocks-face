@@ -9,7 +9,7 @@ class ConnectionModel: public QAbstractTableModel
 
 private:
     QList<SSConnection *> connections;
-    QStringList header = { tr("Server"), tr("Local") };
+    QStringList header = { tr("Server"), tr("Local"), tr("Latency"), tr("PID") };
 
     bool checkIndex(const QModelIndex &i) const
     {
@@ -18,31 +18,24 @@ private:
                && i.column() >= 0 && i.column() < header.size();    // column
     }
 
-public:
-    enum OutputType {
-        STDOUT, STDERR
-    };
-
 signals:
-    void output(const SSConfig &config, ConnectionModel::OutputType outputType, const QString &msg);
+    void output(const SSConfig &config, SSConnection::OutputType outputType, const QString &msg);
 
 public slots:
     void add(const SSConfig &config)
     {
         auto connection = new SSConnection(config, this);
-        connect(connection, &SSConnection::finished, [this, connection] {
-            int row = connections.indexOf(connection);
+        connect(connection, &SSConnection::terminated, [this, connection] {
+            auto row = connections.indexOf(connection);
             if (row == -1) return;
             beginRemoveRows(QModelIndex(), row, row);
             connections.removeAt(row);
             endRemoveRows();
             connection->deleteLater();
         });
-        connect(&connection->process, &QProcess::readyReadStandardOutput, [this, connection] {
-            emit output(connection->ss_config, OutputType::STDOUT, connection->process.readAllStandardOutput());
-        });
-        connect(&connection->process, &QProcess::readyReadStandardError, [this, connection] {
-            emit output(connection->ss_config, OutputType::STDERR, connection->process.readAllStandardError());
+        connect(connection, &SSConnection::output, this, &ConnectionModel::output);
+        connect(connection, &SSConnection::latencyTestFinished, [this] {
+            emit dataChanged(QModelIndex(), QModelIndex());
         });
         beginInsertRows(QModelIndex(), connections.size(), connections.size());
         connections.append(connection);
@@ -54,6 +47,12 @@ public slots:
     {
         if (checkIndex(i))
             connections[i.row()]->terminate();
+    }
+
+    void testLatency(const QModelIndex &i)
+    {
+        if (checkIndex(i))
+            connections[i.row()]->testLatency();
     }
 
 public:
@@ -76,18 +75,25 @@ public:
     QVariant data(const QModelIndex &index, int role) const override
     {
         if (checkIndex(index)) {
-            const SSConfig &config = connections[index.row()]->ss_config;
-            switch (index.column()) {
-            case 0:
-                if (role == Qt::DisplayRole)
-                    return config.getName();
-                break;
-            case 1:
-                if (role == Qt::DisplayRole)
-                    return config.getLocal();
-                break;
-            default:
-                throw std::runtime_error("unknown column");
+            const auto &connection = connections[index.row()];
+            if (role == Qt::DisplayRole) {
+                switch (index.column()) {
+                case 0:
+                    return connection->ss_config.getName();
+                case 1:
+                    return connection->ss_config.getLocal();
+                case 2:
+                    switch (connection->latency_ms) {
+                    case SSConnection::LatencyType::NO_TEST:
+                        return QVariant();
+                    case SSConnection::LatencyType::TEST_ERROR:
+                        return tr("Test Error");
+                    default:
+                        return QString("%1 ms").arg(connection->latency_ms);
+                    }
+                case 3:
+                    return connection->process.processId();
+                }
             }
         }
         return QVariant();

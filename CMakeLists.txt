@@ -32,8 +32,7 @@ add_executable(ss-face WIN32
     src/data/dao/SSConfigDAO.h
     src/data/model/ConfigModel.h
     src/data/model/ConnectionModel.h
-    src/tools/latencytester.cpp
-    src/tools/latencytester.h
+    src/tools/ProxyLatencyTester.h
     src/tools/SingleInstanceDoorbell.h
     src/tools/QRMat.h
     src/ui/custom_widgets/ScalableImageWidget.h

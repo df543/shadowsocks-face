@@ -25,7 +25,6 @@ private:
     Ui::MainWindow *ui;
     QSystemTrayIcon systray;
     bool hideFirst = false;
-    void testLatency(SSConfig &config);
     ConnectionModel connectionModel{this};
     ConfigModel configModel{this};
 

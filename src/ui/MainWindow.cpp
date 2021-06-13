@@ -4,7 +4,6 @@
 #include "EditDialog.h"
 #include "ShareDialog.h"
 #include "global.h"
-#include "tools/latencytester.h"
 
 MainWindow::MainWindow(QWidget *parent):
     QMainWindow(parent), ui(new Ui::MainWindow)
@@ -23,11 +22,11 @@ MainWindow::MainWindow(QWidget *parent):
     for (auto i : ui->toolBarConnection->actions())
         ui->tableViewConnections->addAction(i);
 
-    connect(&connectionModel, &ConnectionModel::output, [this](const SSConfig & config, ConnectionModel::OutputType outputType, QString msg) {
+    connect(&connectionModel, &ConnectionModel::output, [this](const SSConfig & config, SSConnection::OutputType outputType, QString msg) {
         QString textStyle =
-            outputType == ConnectionModel::OutputType::STDOUT
+            outputType == SSConnection::OutputType::STDOUT
             ? "color:DimGray;"
-            : outputType == ConnectionModel::OutputType::STDERR
+            : outputType == SSConnection::OutputType::STDERR
             ? "color:BlueViolet;" : QString();
         auto logEntry = QString("<b>%1</b><br>"
                                 "<span style='%2'>%3</span>")
@@ -106,24 +105,6 @@ void MainWindow::saveAutoConnect()
 //            if (processManager->isRunning(i.id))
 //                out << i.id << "\n";
 //        f.close();
-//    }
-}
-
-void MainWindow::testLatency(SSConfig &config)
-{
-//    if (processManager->isRunning(config.id)) {
-//        auto *tester = new LatencyTester(
-//            QNetworkProxy(QNetworkProxy::Socks5Proxy, config.local_address, config.local_port),
-//            QUrl("https://google.com"),
-//            this
-//        );
-//        connect(tester, &LatencyTester::testFinished, [&config, this](int latencyMs) {
-//            if (processManager->isRunning(config.id)) {
-//                config.latencyMs = latencyMs;
-//                sync();
-//            }
-//        });
-//        tester->start();
 //    }
 }
 
@@ -223,9 +204,8 @@ void MainWindow::on_actionShare_triggered()
 
 void MainWindow::on_actionTestLatency_triggered()
 {
-//    int row = ui->configTable->currentRow();
-//    SSConfig &config = configData[row];
-//    testLatency(config);
+    auto connection_index = ui->tableViewConnections->selectionModel()->selection().indexes().at(0);
+    connectionModel.testLatency(connection_index);
 }
 
 void MainWindow::on_actionAbout_triggered()

@@ -11,7 +11,7 @@ inline const QString abbr = "ss-face";
 inline const QString version = SS_FACE_APP_VERSION;
 
 inline QVariantHash settings{
-    {"ss_client", "sslocal-rust"},
+    {"ss_client", "sslocal-rust --log-without-time"},
 //    {"ss_client", "sslocal"},
 //    {"ss_client", "ss-local"},
     {"ss_command_type", "json_file"}
