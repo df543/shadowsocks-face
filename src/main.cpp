@@ -15,8 +15,7 @@ int main(int argc, char *argv[])
         a.installTranslator(&translator);
 
     MainWindow w;
-    if (!w.isHideFirst())
-        w.show();
+    w.checkShow();
 
     SingleInstanceDoorbell doorbell(a.applicationName());
     QObject::connect(&doorbell, &SingleInstanceDoorbell::rang, &w, &MainWindow::focus);

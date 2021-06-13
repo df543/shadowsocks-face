@@ -15,8 +15,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override;
-    bool isHideFirst() const
-    { return hideFirst; }
+    void checkShow();
 
 public slots:
     void focus();
@@ -24,7 +23,6 @@ public slots:
 private:
     Ui::MainWindow *ui;
     QSystemTrayIcon systray;
-    bool hideFirst = false;
     ConnectionModel connectionModel{this};
     ConfigModel configModel{this};
 

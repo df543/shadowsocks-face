@@ -48,6 +48,12 @@ MainWindow::MainWindow(QWidget *parent):
 MainWindow::~MainWindow()
 { delete ui; }
 
+void MainWindow::checkShow()
+{
+    if (connectionModel.rowCount(QModelIndex()) == 0)
+        focus();
+}
+
 void MainWindow::focus()
 {
     show();
