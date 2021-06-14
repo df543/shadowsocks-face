@@ -10,13 +10,11 @@ class SSConfigDAO: public QObject
 
 public:
     explicit SSConfigDAO(QObject *parent = nullptr):
-        QObject(parent), db(QSqlDatabase::addDatabase("QSQLITE"))
+        QObject(parent), db(QSqlDatabase::database())
     {
-        db.setDatabaseName(QDir(global::savePath()).filePath(databaseName));
-        if (!db.open())
-            throw std::runtime_error("db open error");
-        db.exec(sql_create_table);
-        if (db.lastError().type() != QSqlError::NoError)
+        QSqlQuery query(db);
+        query.prepare(sql_create_table);
+        if (!query.exec())
             throw std::runtime_error("db create table error");
     }
 
@@ -81,9 +79,8 @@ public:
     }
 
 private:
-    QString databaseName = "configs.db";
-    QString tableName = "config";
     QSqlDatabase db;
+    QString tableName = "config";
 
     QString sql_create_table =
         QString("CREATE TABLE IF NOT EXISTS %1 ("

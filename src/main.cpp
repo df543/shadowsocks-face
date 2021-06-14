@@ -5,8 +5,9 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    global::init();
 
-    a.setApplicationName(global::abbr);
+    a.setApplicationName(global::shortName);
     a.setApplicationDisplayName(global::name);
     a.setApplicationVersion(global::version);
 
