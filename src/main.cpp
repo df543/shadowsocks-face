@@ -5,7 +5,7 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    global::init();
+    global::init(&a);
 
     a.setApplicationName(global::shortName);
     a.setApplicationDisplayName(global::name);

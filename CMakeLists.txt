@@ -29,6 +29,7 @@ add_executable(ss-face WIN32
     src/version.h
     src/data/entity/SSConfig.h
     src/data/entity/SSConnection.h
+    src/data/dao/KeyValueDAO.h
     src/data/dao/SSConfigDAO.h
     src/data/model/ConfigModel.h
     src/data/model/ConnectionModel.h

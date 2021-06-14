@@ -2,6 +2,7 @@
 #define GLOBAL_H
 
 #include "version.h"
+#include "data/dao/KeyValueDAO.h"
 
 namespace global
 {
@@ -15,7 +16,11 @@ inline QVariantHash settings{
     {"ss_command_type", "json_file"}
 };
 
-inline void init() {
+inline KeyValueDAO *kvDAO = nullptr;
+
+inline void init(QObject *parent)
+{
+    // database
     QString savePath = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
     QString dbName = "saves.db";
 
@@ -25,6 +30,14 @@ inline void init() {
     db.setDatabaseName(QDir(savePath).filePath(dbName));
     if (!db.open())
         throw std::runtime_error("db open error");
+
+    // key-value storage
+    kvDAO = new KeyValueDAO(parent);
+
+    // sync settings
+    auto loadSettings = QJsonDocument::fromJson(kvDAO->get("settings").toUtf8()).object().toVariantHash();
+    settings.insert(loadSettings);
+    kvDAO->set("settings", QJsonDocument(QJsonObject::fromVariantHash(settings)).toJson());
 }
 
 }
