@@ -84,16 +84,16 @@ private:
 
     QString sql_create_table =
         QString("CREATE TABLE IF NOT EXISTS %1 ("
-                "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                "method TEXT,"
-                "password TEXT,"
-                "server_address TEXT,"
-                "server_port INTEGER,"
-                "name TEXT,"
-                "local_address TEXT,"
-                "local_port INTEGER,"
-                "mode TEXT,"
-                "timeout INTEGER,"
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                "method TEXT, "
+                "password TEXT, "
+                "server_address TEXT, "
+                "server_port INTEGER, "
+                "name TEXT, "
+                "local_address TEXT, "
+                "local_port INTEGER, "
+                "mode TEXT, "
+                "timeout INTEGER, "
                 "fast_open INTEGER);").arg(tableName);
     QString sql_select_all =
         QString("SELECT id, method, password, server_address, server_port, name, "

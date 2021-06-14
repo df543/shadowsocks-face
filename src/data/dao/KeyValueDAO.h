@@ -45,7 +45,7 @@ private:
 
     QString sql_create_table =
         QString("CREATE TABLE IF NOT EXISTS %1 ("
-                "key TEXT PRIMARY KEY,"
+                "key TEXT PRIMARY KEY, "
                 "value TEXT);").arg(tableName);
     QString sql_select_by_key =
         QString("SELECT value FROM %1 where key=:key;").arg(tableName);
