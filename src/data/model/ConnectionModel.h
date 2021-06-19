@@ -2,6 +2,7 @@
 #define CONNECTION_MODEL_H
 
 #include "data/entity/SSConnection.h"
+#include "global.h"
 
 class ConnectionModel: public QAbstractTableModel
 {
@@ -10,6 +11,7 @@ class ConnectionModel: public QAbstractTableModel
 private:
     QList<SSConnection *> connections;
     QStringList header = { tr("Server"), tr("Local"), tr("Latency"), tr("PID") };
+    bool isAlive = true;
 
     bool checkIndex(const QModelIndex &i) const
     {
@@ -26,12 +28,16 @@ public slots:
     {
         auto connection = new SSConnection(config, this);
         connect(connection, &SSConnection::terminated, [this, connection] {
-            auto row = connections.indexOf(connection);
-            if (row == -1) return;
-            beginRemoveRows(QModelIndex(), row, row);
-            connections.removeAt(row);
-            endRemoveRows();
-            connection->deleteLater();
+            if (isAlive)
+            {
+                auto row = connections.indexOf(connection);
+                if (row == -1) return;
+                beginRemoveRows(QModelIndex(), row, row);
+                connections.removeAt(row);
+                endRemoveRows();
+                saveLastConnected();
+                connection->deleteLater();
+            }
         });
         connect(connection, &SSConnection::output, this, &ConnectionModel::output);
         connect(connection, &SSConnection::latencyTestFinished, [this] {
@@ -40,6 +46,7 @@ public slots:
         beginInsertRows(QModelIndex(), connections.size(), connections.size());
         connections.append(connection);
         endInsertRows();
+        saveLastConnected();
         connection->start();
     }
 
@@ -55,9 +62,24 @@ public slots:
             connections[i.row()]->testLatency();
     }
 
+    void saveLastConnected()
+    {
+        QJsonArray ids;
+        for (const auto &i : connections) {
+            auto id = i->ss_config.id;
+            if (abs(id) > 9007199254740992)
+                throw std::runtime_error("id value is too large");
+            ids.push_back(id);
+        }
+        global::kvDAO->set("last_connected", QJsonDocument(ids).toJson());
+    }
+
 public:
     explicit ConnectionModel(QObject *parent = nullptr):
         QAbstractTableModel(parent) {}
+
+    ~ConnectionModel() override
+    { isAlive = false; }
 
     int rowCount(const QModelIndex &parent) const override
     { return parent.isValid() ? 0 : connections.size(); }

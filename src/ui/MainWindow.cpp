@@ -34,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent):
         ui->textBrowserLog->append(logEntry);
     });
 
-    loadAutoConnect();
+    loadLastConnected();
 
     systray.setIcon(QIcon(":/icons/app"));
     auto *systrayMenu = new QMenu(this);
@@ -83,35 +83,13 @@ void MainWindow::checkStatus()
     ui->actionTestLatency->setEnabled(connectionSelected);
 }
 
-void MainWindow::loadAutoConnect()
+void MainWindow::loadLastConnected()
 {
-//    QFile f{QDir{dirPath}.filePath("last_connected.txt")};
-//    QSet<qint64> startIds;
-//    if (f.open(QIODevice::ReadOnly)) {
-//        QTextStream in(&f);
-//        for (;;) {
-//            QString line = in.readLine();
-//            if (line.isNull()) break;
-//            else startIds.insert(line.toInt());
-//        }
-//        f.close();
-//    }
-//    if (!startIds.empty()) hideFirst = true;
-//    for (auto &i : configData)
-//        if (startIds.contains(i.id))
-//            startConfig(i);
-}
-
-void MainWindow::saveAutoConnect()
-{
-//    QFile f{QDir{dirPath}.filePath("last_connected.txt")};
-//    if (f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-//        QTextStream out(&f);
-//        for (const auto &i : configData)
-//            if (processManager->isRunning(i.id))
-//                out << i.id << "\n";
-//        f.close();
-//    }
+    QSet<decltype(SSConfig::id)> idSet;
+    for (const auto &i : QJsonDocument::fromJson(global::kvDAO->get("last_connected").toUtf8()).array())
+        idSet.insert(decltype(SSConfig::id)(i.toDouble()));
+    for (const auto &i : configModel.getByIds(idSet))
+        connectionModel.add(i);
 }
 
 void MainWindow::on_actionConnect_triggered()

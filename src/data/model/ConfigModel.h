@@ -34,6 +34,15 @@ public slots:
         endResetModel();
     }
 
+    QList<SSConfig> getByIds(const QSet<decltype(SSConfig::id)> &idSet)
+    {
+        QList<SSConfig> res;
+        for (const auto &i : configs)
+            if (idSet.contains(i.id))
+                res.push_back(i);
+        return res;
+    }
+
     void add(SSConfig config)
     {
         config.id = dao.insert(config);

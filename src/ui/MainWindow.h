@@ -28,8 +28,7 @@ private:
 
 private slots:
     void checkStatus();
-    void loadAutoConnect();
-    void saveAutoConnect();
+    void loadLastConnected();
 
     void on_actionConnect_triggered();
     void on_actionDisconnect_triggered();
