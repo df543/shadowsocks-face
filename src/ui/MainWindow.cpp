@@ -50,8 +50,13 @@ MainWindow::~MainWindow()
 
 void MainWindow::checkShow()
 {
-    if (connectionModel.rowCount(QModelIndex()) == 0)
-        focus();
+    auto check = [this] {
+        if (connectionModel.rowCount(QModelIndex()) == 0)
+            focus();
+    };
+    check();
+    // check again to prevent connection failure
+    QTimer::singleShot(300, check);
 }
 
 void MainWindow::focus()
