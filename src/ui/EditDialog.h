@@ -15,7 +15,7 @@ public:
     enum DialogType {
         NEW_CONFIG, EDIT_CONFIG
     };
-    explicit EditDialog(const SSConfig &config, DialogType dialogType,QWidget *parent = nullptr);
+    explicit EditDialog(const SSConfig &config, DialogType dialogType, QWidget *parent = nullptr);
     ~EditDialog() override;
 
 signals:
@@ -26,6 +26,8 @@ private:
     SSConfig config;
 
 private slots:
+    void on_pushButton_localAddress_localhost_clicked();
+    void on_pushButton_localAddress_lan_clicked();
     void on_buttonBox_accepted();
 };
 

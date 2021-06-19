@@ -11,11 +11,11 @@ EditDialog::EditDialog(const SSConfig &config, DialogType dialogType, QWidget *p
         setWindowTitle(tr("Edit"));
 
     ui->lineEdit_name->setText(config.name);
-    ui->lineEdit_serverAddr->setText(config.server_address);
+    ui->lineEdit_serverAddress->setText(config.server_address);
     ui->spinBox_serverPort->setValue(config.server_port);
     ui->comboBox_method->setCurrentText(config.method);
     ui->lineEdit_password->setText(config.password);
-    ui->lineEdit_localAddr->setText(config.local_address);
+    ui->lineEdit_localAddress->setText(config.local_address);
     ui->spinBox_localPort->setValue(config.local_port);
     ui->spinBox_timeout->setValue(config.timeout);
     ui->comboBox_mode->setCurrentText(config.mode);
@@ -25,14 +25,20 @@ EditDialog::EditDialog(const SSConfig &config, DialogType dialogType, QWidget *p
 EditDialog::~EditDialog()
 { delete ui; }
 
+void EditDialog::on_pushButton_localAddress_localhost_clicked()
+{ ui->lineEdit_localAddress->setText("127.0.0.1"); }
+
+void EditDialog::on_pushButton_localAddress_lan_clicked()
+{ ui->lineEdit_localAddress->setText("0.0.0.0"); }
+
 void EditDialog::on_buttonBox_accepted()
 {
     bool valid = true;
 
-    if (ui->lineEdit_serverAddr->text().size() == 0) {
-        ui->lineEdit_serverAddr->setStyleSheet("background-color: pink");
+    if (ui->lineEdit_serverAddress->text().size() == 0) {
+        ui->lineEdit_serverAddress->setStyleSheet("background-color: pink");
         valid = false;
-    } else ui->lineEdit_serverAddr->setStyleSheet("background-color:");
+    } else ui->lineEdit_serverAddress->setStyleSheet("background-color:");
 
     if (ui->comboBox_method->currentIndex() == -1) {
         ui->comboBox_method->setStyleSheet("background-color: pink");
@@ -47,7 +53,7 @@ void EditDialog::on_buttonBox_accepted()
     if (!valid) return;
 
     config.name = ui->lineEdit_name->text();
-    config.server_address = ui->lineEdit_serverAddr->text();
+    config.server_address = ui->lineEdit_serverAddress->text();
     config.server_port = ui->spinBox_serverPort->value();
     config.local_port = ui->spinBox_localPort->value();
     config.password = ui->lineEdit_password->text();
@@ -55,7 +61,7 @@ void EditDialog::on_buttonBox_accepted()
     config.method = ui->comboBox_method->currentText();
     config.mode = ui->comboBox_mode->currentText();
     config.fast_open = ui->checkBox_fastopen->isChecked();
-    config.local_address = ui->lineEdit_localAddr->text();
+    config.local_address = ui->lineEdit_localAddress->text();
 
     emit saveConfig(config);
     this->accept();
