@@ -18,16 +18,20 @@ inline QVariantHash settings{
 
 inline KeyValueDAO *kvDAO = nullptr;
 
+inline QString savePath()
+{
+    QString res = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+    if (!QDir(res).mkpath("."))
+        throw std::runtime_error("cannot create save path");
+    return res;
+}
+
 inline void init(QObject *parent)
 {
     // database
-    QString savePath = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
     QString dbName = "saves.db";
-
-    if (!QDir(savePath).mkpath("."))
-        throw std::runtime_error("cannot create save path");
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName(QDir(savePath).filePath(dbName));
+    db.setDatabaseName(QDir(savePath()).filePath(dbName));
     if (!db.open())
         throw std::runtime_error("db open error");
 

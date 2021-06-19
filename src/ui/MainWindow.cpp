@@ -34,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent):
         ui->textBrowserLog->append(logEntry);
     });
 
+    compatibility();
     loadLastConnected();
 
     systray.setIcon(QIcon(":/icons/app"));
@@ -229,3 +230,75 @@ void MainWindow::on_actionShow_triggered()
 
 void MainWindow::on_actionQuit_triggered()
 { QApplication::quit(); }
+
+void MainWindow::compatibility()
+{
+    typedef decltype(SSConfig::id) IDType;
+    QDir configDir(global::savePath());
+
+    // restore old configs
+
+    QList<SSConfig> oldConfigs;
+    configDir.setNameFilters({"*.json"});
+    for (const auto &i : configDir.entryInfoList()) {
+        QFile f(i.filePath());
+        if (!f.open(QIODevice::ReadOnly))
+            throw std::runtime_error("couldn't open config file");
+        auto json = QJsonDocument::fromJson(f.readAll()).object();
+        f.close();
+
+        // patch an old bug
+        if (json.contains("fastopen"))
+            json["fast_open"] = json["fastopen"].toBool();
+
+        // determine config id
+        IDType id = -1;
+        if (json.contains("id")) {
+            id = IDType(json["id"].toDouble());
+        } else {
+            bool baseNameIsNumber = false;
+            auto baseNameNumber = i.baseName().toLongLong(&baseNameIsNumber);
+            if (baseNameIsNumber)
+                id = baseNameNumber;
+        }
+
+        auto config = SSConfig::fromJsonObject(json);
+        config.id = id;
+
+        if (f.remove())
+            oldConfigs.append(config);
+    }
+
+    QHash<IDType, IDType> idMap;
+
+    for (auto &i : oldConfigs) {
+        IDType oldID = i.id;
+        configModel.add(i);
+        if (oldID != -1)
+            idMap[oldID] = i.id;
+    }
+
+    // restore old last_connected
+
+    QList<IDType> ids;
+    QFile last_connected_file(configDir.filePath("last_connected.txt"));
+    if (last_connected_file.open(QIODevice::ReadOnly)) {
+        QTextStream in(&last_connected_file);
+        forever {
+            QString line = in.readLine();
+            if (line.isNull()) break;
+            IDType oldID = line.toLongLong();
+            if (idMap.contains(oldID))
+                ids.push_back(idMap[oldID]);
+        }
+        last_connected_file.close();
+    }
+
+    if (last_connected_file.remove()) {
+        auto last_connected = QJsonDocument::fromJson(global::kvDAO->get("last_connected").toUtf8()).array();
+        for (auto id : ids)
+            if (abs(id) <= 9007199254740992)
+                last_connected.push_back(id);
+        global::kvDAO->set("last_connected", QJsonDocument(last_connected).toJson());
+    }
+}

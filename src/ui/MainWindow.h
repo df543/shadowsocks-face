@@ -29,6 +29,7 @@ private:
 private slots:
     void checkStatus();
     void loadLastConnected();
+    void compatibility();
 
     void on_actionConnect_triggered();
     void on_actionDisconnect_triggered();

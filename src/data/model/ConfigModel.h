@@ -43,7 +43,7 @@ public slots:
         return res;
     }
 
-    void add(SSConfig config)
+    void add(SSConfig &config)
     {
         config.id = dao.insert(config);
         beginInsertRows(QModelIndex(), configs.size(), configs.size());
@@ -83,7 +83,8 @@ public slots:
         QJsonArray jsonConfigs = json["configs"].toArray();
 
         for (const auto &i : jsonConfigs) {
-            add(SSConfig::fromJsonObject(i.toObject()));
+            auto config = SSConfig::fromJsonObject(i.toObject());
+            add(config);
         }
     }
 
