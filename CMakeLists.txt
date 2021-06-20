@@ -43,6 +43,9 @@ add_executable(ss-face WIN32
     src/ui/MainWindow.cpp
     src/ui/MainWindow.h
     src/ui/MainWindow.ui
+    src/ui/SettingsDialog.cpp
+    src/ui/SettingsDialog.h
+    src/ui/SettingsDialog.ui
     src/ui/ShareDialog.cpp
     src/ui/ShareDialog.h
     src/ui/ShareDialog.ui)

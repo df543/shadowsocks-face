@@ -46,6 +46,7 @@ private slots:
     void on_actionAddFromURI_triggered();
     void on_actionShow_triggered();
     void on_actionTestLatency_triggered();
+    void on_actionSettings_triggered();
 
 protected slots:
     void closeEvent(QCloseEvent *e) override;

@@ -11,10 +11,12 @@ inline const QString name = "Shadowsocks Face";
 inline const QString shortName = "ss-face";
 inline const QString version = SS_FACE_APP_VERSION;
 
-inline QVariantHash settings{
+inline const QVariantHash defaultSettings{
     {"ss_client", "sslocal-rust --log-without-time"},
     {"ss_command_type", "json_file"}
 };
+
+inline QVariantHash settings = defaultSettings;
 
 inline KeyValueDAO *kvDAO = nullptr;
 

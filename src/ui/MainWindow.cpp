@@ -3,6 +3,7 @@
 
 #include "EditDialog.h"
 #include "ShareDialog.h"
+#include "SettingsDialog.h"
 #include "global.h"
 
 MainWindow::MainWindow(QWidget *parent):
@@ -162,26 +163,26 @@ void MainWindow::on_actionRefresh_triggered()
 
 void MainWindow::on_actionImport_triggered()
 {
-    configModel.importGUIConfig(
-        QFileDialog::getOpenFileName(
-            this,
-            QString(),
-            QString(),
-            "GUI Config(*.json)"
-        )
-    );
+    auto path = QFileDialog::getOpenFileName(
+                    this,
+                    QString(),
+                    QString(),
+                    "GUI Config(*.json)"
+                );
+    if (!path.isNull())
+        configModel.importGUIConfig(path);
 }
 
 void MainWindow::on_actionExport_triggered()
 {
-    configModel.exportGUIConfig(
-        QFileDialog::getSaveFileName(
-            this,
-            QString(),
-            "gui-config.json",
-            "GUI Config(*.json)"
-        )
-    );
+    auto path = QFileDialog::getSaveFileName(
+                    this,
+                    QString(),
+                    "gui-config.json",
+                    "GUI Config(*.json)"
+                );
+    if (!path.isNull())
+        configModel.exportGUIConfig(path);
 }
 
 void MainWindow::on_actionShare_triggered()
@@ -197,6 +198,9 @@ void MainWindow::on_actionTestLatency_triggered()
     auto connection_index = ui->tableViewConnections->selectionModel()->selection().indexes().at(0);
     connectionModel.testLatency(connection_index);
 }
+
+void MainWindow::on_actionSettings_triggered()
+{ SettingsDialog(this).exec(); }
 
 void MainWindow::on_actionAbout_triggered()
 {
