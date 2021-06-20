@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     SingleInstanceDoorbell doorbell(a.applicationName());
     QObject::connect(&doorbell, &SingleInstanceDoorbell::rang, &w, &MainWindow::focus);
     if (!doorbell.setup()) {
-        std::cerr << "Found another instance, the program is quiting.\n";
+        QTextStream(stderr) << QObject::tr("Another instance is running, the program will exit.\n");
         return 2;
     }
 

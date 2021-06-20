@@ -1,28 +1,17 @@
 # Shadowsocks Face
 
-shadowsocks-libev client gui wrapper.
+A simple cross-platform GUI for shadowsocks client.
 
-## Build and install
+It works on all shadowsocks implementations that supports JSON configuration, including [shadowsocks-rust](https://github.com/shadowsocks/shadowsocks-rust), [shadowsocks-libev](https://github.com/shadowsocks/shadowsocks-libev), [shadowsocks(python)](https://github.com/shadowsocks/shadowsocks), etc., but not [go-shadowsocks2](https://github.com/shadowsocks/go-shadowsocks2) which only supports command line URI argument. Set client program in settings.
 
-First, install qt5 development package:
+## Build
 
-```sh
-sudo apt install qt5-default    # Ubuntu
-sudo dnf install qt5-devel      # Fedora
-```
-
-Then clone and build project:
+Build requires CMake and Qt 5/6.
 
 ```sh
-git clone https://github.com/df543/Shadowsocks-Face.git
-cd Shadowsocks-Face; mkdir build; cd build
-qmake-qt5 .. || qmake ..
+mkdir build; cd build
+cmake ..
 make
 ```
 
-Also available from [AUR](https://aur.archlinux.org/packages/ss-face/).
-
-## Troubleshooting
-
-1. `ERROR: bind: Address already in use`: Try to kill all ss-local processes.
-2. (macOS) Failed to start ss-local process, but shadowsocks-libev has already installed using homebrew: Start program via terminal `open -a path/ss-face`.
+Also, available in the [AUR](https://aur.archlinux.org/packages/ss-face/).

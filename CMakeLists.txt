@@ -20,7 +20,7 @@ find_package(Qt${QT_VERSION} COMPONENTS Widgets LinguistTools Network Sql REQUIR
 set(TS_FILES
     res/i18n/zh_CN.ts)
 qt_create_translation(QM_FILES src ${TS_FILES})
-add_custom_target(ss-face_ts ALL DEPENDS ${TS_FILES})
+add_custom_target(ss-face_ts DEPENDS ${TS_FILES})
 
 add_executable(ss-face WIN32
     res/res.qrc

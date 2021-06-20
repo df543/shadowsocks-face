@@ -3,8 +3,8 @@
 
 // c++
 #include <algorithm>
+#include <cstdio>
 #include <exception>
-#include <iostream>
 #include <stdexcept>
 #include <utility>
 
@@ -40,7 +40,6 @@
 #include <QMessageBox>
 #include <QStatusBar>
 #include <QSystemTrayIcon>
-#include <QTableWidget>
 #include <QTextEdit>
 #include <QToolBar>
 
@@ -50,6 +49,5 @@
 // qt sql
 #include <QSqlError>
 #include <QSqlQuery>
-#include <QSqlTableModel>
 
 #endif // PCH_H

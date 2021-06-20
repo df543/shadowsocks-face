@@ -19,14 +19,14 @@
      <item row="0" column="0">
       <widget class="QLabel" name="label_client">
        <property name="text">
-        <string>Shadowsocks Client Commmand</string>
+        <string>Shadowsocks Client</string>
        </property>
       </widget>
      </item>
      <item row="1" column="0">
       <widget class="QLabel" name="label_commandType">
        <property name="text">
-        <string>Client Call method</string>
+        <string>Call Method</string>
        </property>
       </widget>
      </item>
@@ -47,7 +47,7 @@
        <item>
         <widget class="QToolButton" name="toolButton_client">
          <property name="text">
-          <string>...</string>
+          <string notr="true">...</string>
          </property>
         </widget>
        </item>

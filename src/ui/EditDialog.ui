@@ -108,7 +108,7 @@
      <item row="7" column="1">
       <widget class="QCheckBox" name="checkBox_fastopen">
        <property name="text">
-        <string>Enable TCP fast open</string>
+        <string>Enable TCP Fast Open</string>
        </property>
       </widget>
      </item>

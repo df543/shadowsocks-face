@@ -141,7 +141,7 @@ void MainWindow::on_actionRemove_triggered()
     const SSConfig &config = configModel.getAt(i);
     if (QMessageBox::question(
             this,
-            tr("Confirm removing"),
+            tr("Confirm Deletion"),
             tr("Are you sure to remove config '%1'?").arg(config.getName()),
             QMessageBox::StandardButtons(QMessageBox::Yes | QMessageBox::No),
             QMessageBox::No) == QMessageBox::Yes) {
@@ -205,25 +205,21 @@ void MainWindow::on_actionSettings_triggered()
 
 void MainWindow::on_actionAbout_triggered()
 {
-    QString content{tr(
-                        "<h1>%1</h1>"
+    QString content = tr("<h1>%1</h1>"
 
-                        "<p><i>%2</i> is a <a href='https://github.com/shadowsocks/shadowsocks-libev'>shadowsocks-libev</a> client wrapper using qt5.</p>"
+                         "<p><i>%2</i> is a simple, cross-platform GUI for shadowsocks client, supports multiple implementations.</p>"
 
-                        "<p>"
-                        "Special thanks to <a href='https://github.com/shadowsocks/shadowsocks-qt5'>Shadowsocks-Qt5</a> project;<br>"
-                        "Use <a href='https://github.com/nayuki/QR-Code-generator'>nayuki/QR-Code-generator</a> (<a href='https://opensource.org/licenses/MIT'>MIT</a>) to generate QR Code."
-                        "</p>"
+                         "<p>"
+                         "Special thanks to <a href='https://github.com/shadowsocks/shadowsocks-qt5'>Shadowsocks-Qt5</a> project;<br>"
+                         "Use <a href='https://github.com/nayuki/QR-Code-generator'>nayuki/QR-Code-generator</a> (<a href='https://opensource.org/licenses/MIT'>MIT</a>) to generate QR Code."
+                         "</p>"
 
-                        "<hr>"
-                        "Version: %3<br>"
-                        "License: <a href='https://www.gnu.org/licenses/gpl.html'>GPL-3.0</a><br>"
-                        "Project Home: <a href='https://github.com/df543/Shadowsocks-Face'>df543/Shadowsocks-Face</a>"
-                    ).arg(
-                        QApplication::applicationDisplayName(),
-                        QApplication::applicationName(),
-                        QApplication::applicationVersion()
-                    )};
+                         "<hr>"
+
+                         "Homepage: <a href='https://github.com/df543/Shadowsocks-Face'>df543/Shadowsocks-Face</a><br>"
+                         "License: <a href='https://www.gnu.org/licenses/gpl.html'>GPL-3.0</a><br>"
+                         "Version: %3"
+                        ).arg(global::name, global::shortName, global::version);
     QMessageBox::about(this, tr("About"), content);
 }
 

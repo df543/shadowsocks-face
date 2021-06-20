@@ -30,7 +30,7 @@ public:
         connect(&process, &QProcess::errorOccurred, [this](QProcess::ProcessError error) {
             if (error == QProcess::FailedToStart) {
                 emit output(this->ss_config, OutputType::STDERR,
-                            tr("Error: process failed to start\nCheck client command settings\n"));
+                            tr("Error: process failed to start\nCheck Shadowsocks Client in settings\n"));
                 emit terminated();
             }
         });
@@ -70,7 +70,7 @@ public slots:
             command.append({"-c", json_file->fileName()});
         } else {
             emit output(this->ss_config, OutputType::STDERR,
-                        tr("Error: unknown argument type '%1'\nCheck call method settings\n").arg(ss_command_type));
+                        tr("Error: unknown argument type '%1'\nCheck Call Method in settings\n").arg(ss_command_type));
             emit terminated();
             return;
         }
