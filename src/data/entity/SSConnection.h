@@ -30,7 +30,7 @@ public:
         connect(&process, &QProcess::errorOccurred, [this](QProcess::ProcessError error) {
             if (error == QProcess::FailedToStart) {
                 emit output(this->ss_config, OutputType::STDERR,
-                            tr("Error: process failed to start\nCheck client command settings"));
+                            tr("Error: process failed to start\nCheck client command settings\n"));
                 emit terminated();
             }
         });

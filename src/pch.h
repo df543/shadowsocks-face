@@ -28,8 +28,8 @@
 // qt gui
 #include <QClipboard>
 #include <QCloseEvent>
+#include <QFontDatabase>
 #include <QPainter>
-#include <QRegularExpressionValidator>
 
 // qt widgets
 #include <QAction>

@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent):
 {
     ui->setupUi(this);
     setWindowTitle(global::name);
+    ui->textBrowserLog->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
 
     ui->tableViewConfig->setModel(&configModel);
     ui->tableViewConnections->setModel(&connectionModel);
