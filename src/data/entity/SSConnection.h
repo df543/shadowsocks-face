@@ -60,7 +60,8 @@ public slots:
         if (command.empty())
             throw std::runtime_error("shadowsocks client program cannot be empty");
 
-        if (global::settings["ss_command_type"].toString() == "json_file") {
+        auto ss_command_type = global::settings["ss_command_type"].toString();
+        if (ss_command_type == "json_file") {
             auto json_file = new QTemporaryFile(this);
             if (!json_file->open())
                 throw std::runtime_error("cannot open temporary file");
@@ -68,7 +69,10 @@ public slots:
             json_file->close();
             command.append({"-c", json_file->fileName()});
         } else {
-            throw std::runtime_error("unknown argument to call client");
+            emit output(this->ss_config, OutputType::STDERR,
+                        tr("Error: unknown argument type '%1'\nCheck call method settings\n").arg(ss_command_type));
+            emit terminated();
+            return;
         }
 
         process.setProgram(command[0]);
