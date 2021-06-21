@@ -160,7 +160,10 @@ void MainWindow::on_actionEdit_triggered()
 }
 
 void MainWindow::on_actionRefresh_triggered()
-{ configModel.readAll(); }
+{
+    configModel.readAll();
+    checkStatus();
+}
 
 void MainWindow::on_actionImport_triggered()
 {
