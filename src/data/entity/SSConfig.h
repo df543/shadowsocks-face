@@ -40,7 +40,7 @@ public:
 
     QString toURI(URIType uriType) const
     {
-        QString tag_part = name.isEmpty() ? "" : '#' + name.toUtf8().toPercentEncoding();
+        QString tag_part = name.isEmpty() ? "" : "#" + QString(name.toUtf8().toPercentEncoding());
 
         switch (uriType) {
         case ORIGINAL_BASE64: {
