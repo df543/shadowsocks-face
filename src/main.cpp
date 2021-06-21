@@ -15,15 +15,15 @@ int main(int argc, char *argv[])
     if (translator.load(QLocale::system(), "", "", ":/i18n"))
         a.installTranslator(&translator);
 
-    MainWindow w;
-    w.checkShow();
-
     SingleInstanceDoorbell doorbell(a.applicationName());
-    QObject::connect(&doorbell, &SingleInstanceDoorbell::rang, &w, &MainWindow::focus);
     if (!doorbell.setup()) {
         QTextStream(stderr) << QObject::tr("Another instance is running, the program will exit.\n");
         return 2;
     }
+
+    MainWindow w;
+    QObject::connect(&doorbell, &SingleInstanceDoorbell::rang, &w, &MainWindow::focus);
+    w.checkShow();
 
     return a.exec();
 }
