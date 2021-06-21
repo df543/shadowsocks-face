@@ -10,10 +10,10 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-if (NOT DEFINED QT_VERSION)
+if(NOT DEFINED QT_VERSION)
     message("QT_VERSION is not defined, default is Qt5. Add -DQT_VERSION=6 to choose Qt6.")
     set(QT_VERSION 5)
-endif ()
+endif()
 
 find_package(Qt${QT_VERSION} COMPONENTS Widgets LinguistTools Network Sql REQUIRED)
 
@@ -22,7 +22,7 @@ set(TS_FILES
 qt_create_translation(QM_FILES src ${TS_FILES})
 add_custom_target(ss-face_ts DEPENDS ${TS_FILES})
 
-add_executable(ss-face WIN32
+set(SOURCES
     res/res.qrc
     src/global.h
     src/main.cpp
@@ -49,10 +49,13 @@ add_executable(ss-face WIN32
     src/ui/ShareDialog.cpp
     src/ui/ShareDialog.h
     src/ui/ShareDialog.ui)
+if(WIN32)
+    list(APPEND SOURCES platform/windows/res.rc)
+endif()
 
+add_executable(ss-face WIN32 ${SOURCES})
 target_include_directories(ss-face PRIVATE src)
 target_precompile_headers(ss-face PRIVATE src/pch.h)
-
 target_link_libraries(ss-face PRIVATE
     Qt::Widgets
     Qt::Network
@@ -60,9 +63,8 @@ target_link_libraries(ss-face PRIVATE
     QR-Code-generator)
 
 install(TARGETS ss-face
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    )
-install(FILES install/ss-face.desktop
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(FILES platform/unix/ss-face.desktop
     DESTINATION share/applications)
 install(FILES ss-face.png
     DESTINATION share/icons/hicolor/512x512/apps)
