@@ -1,7 +1,6 @@
 [Desktop Entry]
-Name=Shadowsocks-face
-GenericName=Shadowsocks-face
-Comment=Shadowsocks-libev GUI Wrapper
+Name=Shadowsocks Face
+Comment=Shadowsocks client GUI
 Exec=ss-face
 Icon=ss-face
 Terminal=false

@@ -58,3 +58,11 @@ target_link_libraries(ss-face PRIVATE
     Qt::Network
     Qt::Sql
     QR-Code-generator)
+
+install(TARGETS ss-face
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    )
+install(FILES install/ss-face.desktop
+    DESTINATION share/applications)
+install(FILES ss-face.png
+    DESTINATION share/icons/hicolor/512x512/apps)
