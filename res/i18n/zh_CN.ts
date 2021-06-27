@@ -249,114 +249,150 @@
     </message>
     <message>
         <location filename="../../src/ui/MainWindow.ui" line="295"/>
-        <location filename="../../src/ui/MainWindow.cpp" line="222"/>
+        <location filename="../../src/ui/MainWindow.cpp" line="231"/>
         <source>About</source>
         <translation>关于</translation>
     </message>
     <message>
-        <location filename="../../src/ui/MainWindow.ui" line="300"/>
+        <location filename="../../src/ui/MainWindow.ui" line="304"/>
         <source>About &amp;Qt</source>
         <translation>关于 &amp;Qt</translation>
     </message>
     <message>
-        <location filename="../../src/ui/MainWindow.ui" line="303"/>
+        <location filename="../../src/ui/MainWindow.ui" line="307"/>
         <source>About Qt</source>
         <translation>关于 Qt</translation>
     </message>
     <message>
-        <location filename="../../src/ui/MainWindow.ui" line="312"/>
+        <location filename="../../src/ui/MainWindow.ui" line="316"/>
         <source>Add Config &amp;Manually</source>
         <translation>手动添加配置(&amp;M)</translation>
     </message>
     <message>
-        <location filename="../../src/ui/MainWindow.ui" line="315"/>
+        <location filename="../../src/ui/MainWindow.ui" line="319"/>
         <source>Add Config Manually</source>
         <translation>手动添加配置</translation>
     </message>
     <message>
-        <location filename="../../src/ui/MainWindow.ui" line="354"/>
+        <location filename="../../src/ui/MainWindow.ui" line="358"/>
         <source>Add Config From &amp;URI</source>
         <translation>从 &amp;URI 添加配置</translation>
     </message>
     <message>
-        <location filename="../../src/ui/MainWindow.ui" line="357"/>
+        <location filename="../../src/ui/MainWindow.ui" line="361"/>
         <source>Add Config From URI</source>
         <translation>从 URI 添加配置</translation>
     </message>
     <message>
-        <location filename="../../src/ui/MainWindow.ui" line="368"/>
+        <location filename="../../src/ui/MainWindow.ui" line="376"/>
         <source>Show Window</source>
         <translation>显示窗口</translation>
     </message>
     <message>
-        <location filename="../../src/ui/MainWindow.ui" line="385"/>
+        <location filename="../../src/ui/MainWindow.ui" line="397"/>
         <source>&amp;Settings</source>
         <translation>设置(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../../src/ui/MainWindow.ui" line="360"/>
+        <location filename="../../src/ui/MainWindow.ui" line="364"/>
         <source>Ctrl+V</source>
         <translation>Ctrl+V</translation>
     </message>
     <message>
-        <location filename="../../src/ui/MainWindow.ui" line="365"/>
+        <location filename="../../src/ui/MainWindow.ui" line="373"/>
         <source>&amp;Show</source>
         <translation>显示(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../../src/ui/MainWindow.ui" line="377"/>
+        <location filename="../../src/ui/MainWindow.ui" line="385"/>
         <source>&amp;Test Latency</source>
         <translation>测试延迟(&amp;T)</translation>
     </message>
     <message>
-        <location filename="../../src/ui/MainWindow.ui" line="380"/>
+        <location filename="../../src/ui/MainWindow.ui" line="388"/>
         <source>Test Latency</source>
         <translation>测试延迟</translation>
     </message>
     <message>
-        <location filename="../../src/ui/MainWindow.ui" line="324"/>
+        <location filename="../../src/ui/MainWindow.ui" line="328"/>
         <source>&amp;Remove</source>
         <translation>删除(&amp;R)</translation>
     </message>
     <message>
-        <location filename="../../src/ui/MainWindow.ui" line="327"/>
+        <location filename="../../src/ui/MainWindow.ui" line="331"/>
         <source>Remove</source>
         <translation>删除</translation>
     </message>
     <message>
-        <location filename="../../src/ui/MainWindow.ui" line="330"/>
+        <location filename="../../src/ui/MainWindow.ui" line="334"/>
         <source>Del</source>
         <translation>Del</translation>
     </message>
     <message>
-        <location filename="../../src/ui/MainWindow.ui" line="339"/>
+        <location filename="../../src/ui/MainWindow.ui" line="343"/>
         <source>Re&amp;fresh</source>
         <translation>刷新(&amp;F)</translation>
     </message>
     <message>
-        <location filename="../../src/ui/MainWindow.ui" line="342"/>
+        <location filename="../../src/ui/MainWindow.ui" line="346"/>
         <source>Refresh</source>
         <translation>刷新</translation>
     </message>
     <message>
-        <location filename="../../src/ui/MainWindow.ui" line="345"/>
+        <location filename="../../src/ui/MainWindow.ui" line="349"/>
         <source>F5</source>
         <translation>F5</translation>
     </message>
     <message>
-        <location filename="../../src/ui/MainWindow.cpp" line="143"/>
+        <location filename="../../src/ui/MainWindow.cpp" line="144"/>
         <source>Confirm Deletion</source>
         <translation>确认删除</translation>
     </message>
     <message>
-        <location filename="../../src/ui/MainWindow.cpp" line="144"/>
+        <location filename="../../src/ui/MainWindow.cpp" line="145"/>
         <source>Are you sure to remove config &apos;%1&apos;?</source>
         <translation>是否要删除配置 &apos;%1&apos;?</translation>
     </message>
     <message>
-        <location filename="../../src/ui/MainWindow.cpp" line="207"/>
-        <source>&lt;h1&gt;%1&lt;/h1&gt;&lt;p&gt;&lt;i&gt;%2&lt;/i&gt; is a simple, cross-platform GUI for shadowsocks client, supports multiple implementations.&lt;/p&gt;&lt;p&gt;Special thanks to &lt;a href=&apos;https://github.com/shadowsocks/shadowsocks-qt5&apos;&gt;Shadowsocks-Qt5&lt;/a&gt; project;&lt;br&gt;Use &lt;a href=&apos;https://github.com/nayuki/QR-Code-generator&apos;&gt;nayuki/QR-Code-generator&lt;/a&gt; (&lt;a href=&apos;https://opensource.org/licenses/MIT&apos;&gt;MIT&lt;/a&gt;) to generate QR Code.&lt;/p&gt;&lt;hr&gt;Homepage: &lt;a href=&apos;https://github.com/df543/Shadowsocks-Face&apos;&gt;df543/Shadowsocks-Face&lt;/a&gt;&lt;br&gt;License: &lt;a href=&apos;https://www.gnu.org/licenses/gpl.html&apos;&gt;GPL-3.0&lt;/a&gt;&lt;br&gt;Version: %3</source>
-        <translation>&lt;h1&gt;%1&lt;/h1&gt;&lt;p&gt;&lt;i&gt;%2&lt;/i&gt; 是一个简单、跨平台的 shadowsocks 客户端 GUI 程序，支持多种实现。&lt;/p&gt;&lt;p&gt;特别感谢 &lt;a href=&apos;https://github.com/shadowsocks/shadowsocks-qt5&apos;&gt;Shadowsocks-Qt5&lt;/a&gt; 项目；&lt;br&gt;使用 &lt;a href=&apos;https://github.com/nayuki/QR-Code-generator&apos;&gt;nayuki/QR-Code-generator&lt;/a&gt; (&lt;a href=&apos;https://opensource.org/licenses/MIT&apos;&gt;MIT&lt;/a&gt;) 生成二维码。&lt;/p&gt;&lt;hr&gt;主页： &lt;a href=&apos;https://github.com/df543/Shadowsocks-Face&apos;&gt;df543/Shadowsocks-Face&lt;/a&gt;&lt;br&gt;许可协议： &lt;a href=&apos;https://www.gnu.org/licenses/gpl.html&apos;&gt;GPL-3.0&lt;/a&gt;&lt;br&gt;版本： %3</translation>
+        <location filename="../../src/ui/MainWindow.cpp" line="211"/>
+        <source>&lt;h1&gt;%1&lt;/h1&gt;
+
+&lt;p&gt;
+&lt;em&gt;%2&lt;/em&gt; is a simple, cross-platform GUI for shadowsocks client, supports multiple implementations.
+&lt;/p&gt;
+
+&lt;p&gt;
+Special thanks to &lt;a href=&quot;https://github.com/shadowsocks/shadowsocks-qt5&quot;&gt;Shadowsocks-Qt5&lt;/a&gt; project.&lt;br&gt;
+Use &lt;a href=&quot;https://github.com/nayuki/QR-Code-generator&quot;&gt;nayuki/QR-Code-generator&lt;/a&gt; (&lt;a href=&quot;https://opensource.org/licenses/MIT&quot;&gt;MIT&lt;/a&gt;) to generate QR Code.&lt;br&gt;
+Icon set used in this application is &lt;a href=&quot;https://github.com/KDE/breeze-icons&quot;&gt;KDE/breeze-icons&lt;/a&gt;.
+&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;
+Homepage: &lt;a href=&quot;https://github.com/df543/shadowsocks-face&quot;&gt;df543/shadowsocks-face&lt;/a&gt;&lt;br&gt;
+License: &lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0.html&quot;&gt;GPL-3.0&lt;/a&gt;&lt;br&gt;
+Version: %3
+&lt;/p&gt;</source>
+        <translation>&lt;h1&gt;%1&lt;/h1&gt;
+
+&lt;p&gt;
+&lt;em&gt;%2&lt;/em&gt; 是一个简单、跨平台的 shadowsocks 客户端 GUI 程序，支持多种实现。
+&lt;/p&gt;
+
+&lt;p&gt;
+特别感谢 &lt;a href=&quot;https://github.com/shadowsocks/shadowsocks-qt5&quot;&gt;Shadowsocks-Qt5&lt;/a&gt; 项目。&lt;br&gt;
+使用 &lt;a href=&quot;https://github.com/nayuki/QR-Code-generator&quot;&gt;nayuki/QR-Code-generator&lt;/a&gt; (&lt;a href=&quot;https://opensource.org/licenses/MIT&quot;&gt;MIT&lt;/a&gt;) 生成二维码。&lt;br&gt;
+还使用了 &lt;a href=&quot;https://github.com/KDE/breeze-icons&quot;&gt;KDE/breeze-icons&lt;/a&gt; 图标集。
+&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;
+主页： &lt;a href=&quot;https://github.com/df543/shadowsocks-face&quot;&gt;df543/shadowsocks-face&lt;/a&gt;&lt;br&gt;
+许可协议： &lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0.html&quot;&gt;GPL-3.0&lt;/a&gt;&lt;br&gt;
+版本： %3
+&lt;/p&gt;</translation>
     </message>
 </context>
 <context>

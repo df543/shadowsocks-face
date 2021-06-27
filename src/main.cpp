@@ -11,6 +11,10 @@ int main(int argc, char *argv[])
     a.setApplicationDisplayName(global::name);
     a.setApplicationVersion(global::version);
 
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+    a.setAttribute(Qt::AA_UseHighDpiPixmaps);
+#endif
+
     QTranslator translator(&a);
     if (translator.load(QLocale::system(), "", "", ":/i18n"))
         a.installTranslator(&translator);

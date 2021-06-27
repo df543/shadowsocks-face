@@ -208,20 +208,25 @@ void MainWindow::on_actionSettings_triggered()
 
 void MainWindow::on_actionAbout_triggered()
 {
-    QString content = tr("<h1>%1</h1>"
-
-                         "<p><i>%2</i> is a simple, cross-platform GUI for shadowsocks client, supports multiple implementations.</p>"
-
-                         "<p>"
-                         "Special thanks to <a href='https://github.com/shadowsocks/shadowsocks-qt5'>Shadowsocks-Qt5</a> project;<br>"
-                         "Use <a href='https://github.com/nayuki/QR-Code-generator'>nayuki/QR-Code-generator</a> (<a href='https://opensource.org/licenses/MIT'>MIT</a>) to generate QR Code."
+    QString content = tr("<h1>%1</h1>\n"
+                         "\n"
+                         "<p>\n"
+                         "<em>%2</em> is a simple, cross-platform GUI for shadowsocks client, supports multiple implementations.\n"
+                         "</p>\n"
+                         "\n"
+                         "<p>\n"
+                         "Special thanks to <a href=\"https://github.com/shadowsocks/shadowsocks-qt5\">Shadowsocks-Qt5</a> project.<br>\n"
+                         "Use <a href=\"https://github.com/nayuki/QR-Code-generator\">nayuki/QR-Code-generator</a> (<a href=\"https://opensource.org/licenses/MIT\">MIT</a>) to generate QR Code.<br>\n"
+                         "Icon set used in this application is <a href=\"https://github.com/KDE/breeze-icons\">KDE/breeze-icons</a>.\n"
+                         "</p>\n"
+                         "\n"
+                         "<hr>\n"
+                         "\n"
+                         "<p>\n"
+                         "Homepage: <a href=\"https://github.com/df543/shadowsocks-face\">df543/shadowsocks-face</a><br>\n"
+                         "License: <a href=\"https://www.gnu.org/licenses/gpl-3.0.html\">GPL-3.0</a><br>\n"
+                         "Version: %3\n"
                          "</p>"
-
-                         "<hr>"
-
-                         "Homepage: <a href='https://github.com/df543/Shadowsocks-Face'>df543/Shadowsocks-Face</a><br>"
-                         "License: <a href='https://www.gnu.org/licenses/gpl.html'>GPL-3.0</a><br>"
-                         "Version: %3"
                         ).arg(global::name, global::shortName, global::version);
     QMessageBox::about(this, tr("About"), content);
 }

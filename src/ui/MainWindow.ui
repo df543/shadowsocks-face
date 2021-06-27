@@ -296,6 +296,10 @@
    </property>
   </action>
   <action name="actionAboutQt">
+   <property name="icon">
+    <iconset resource="../../res/res.qrc">
+     <normaloff>:/icons/actions/qt</normaloff>:/icons/actions/qt</iconset>
+   </property>
    <property name="text">
     <string>About &amp;Qt</string>
    </property>
@@ -306,7 +310,7 @@
   <action name="actionAddManually">
    <property name="icon">
     <iconset resource="../../res/res.qrc">
-     <normaloff>:/icons/actions/edit-guides</normaloff>:/icons/actions/edit-guides</iconset>
+     <normaloff>:/icons/actions/document-new</normaloff>:/icons/actions/document-new</iconset>
    </property>
    <property name="text">
     <string>Add Config &amp;Manually</string>
@@ -348,7 +352,7 @@
   <action name="actionAddFromURI">
    <property name="icon">
     <iconset resource="../../res/res.qrc">
-     <normaloff>:/icons/actions/edit-paste</normaloff>:/icons/actions/edit-paste</iconset>
+     <normaloff>:/icons/actions/insert-link</normaloff>:/icons/actions/insert-link</iconset>
    </property>
    <property name="text">
     <string>Add Config From &amp;URI</string>
@@ -361,6 +365,10 @@
    </property>
   </action>
   <action name="actionShow">
+   <property name="icon">
+    <iconset resource="../../res/res.qrc">
+     <normaloff>:/icons/actions/window</normaloff>:/icons/actions/window</iconset>
+   </property>
    <property name="text">
     <string>&amp;Show</string>
    </property>
@@ -371,7 +379,7 @@
   <action name="actionTestLatency">
    <property name="icon">
     <iconset resource="../../res/res.qrc">
-     <normaloff>:/icons/actions/flag-green</normaloff>:/icons/actions/flag-green</iconset>
+     <normaloff>:/icons/actions/chronometer</normaloff>:/icons/actions/chronometer</iconset>
    </property>
    <property name="text">
     <string>&amp;Test Latency</string>
@@ -381,6 +389,10 @@
    </property>
   </action>
   <action name="actionSettings">
+   <property name="icon">
+    <iconset resource="../../res/res.qrc">
+     <normaloff>:/icons/actions/configure</normaloff>:/icons/actions/configure</iconset>
+   </property>
    <property name="text">
     <string>&amp;Settings</string>
    </property>

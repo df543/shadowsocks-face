@@ -6,19 +6,22 @@
         <file alias="app">../ss-face.png</file>
     </qresource>
     <qresource prefix="/icons/actions">
-        <file alias="application-exit">action-icons/application-exit.png</file>
-        <file alias="document-edit">action-icons/document-edit.png</file>
-        <file alias="document-export">action-icons/document-export.png</file>
-        <file alias="document-import">action-icons/document-import.png</file>
-        <file alias="document-share">action-icons/document-share.png</file>
-        <file alias="edit-guides">action-icons/edit-guides.png</file>
-        <file alias="help-about">action-icons/help-about.png</file>
-        <file alias="list-add">action-icons/list-add.png</file>
-        <file alias="list-remove">action-icons/list-remove.png</file>
-        <file alias="network-connect">action-icons/network-connect.png</file>
-        <file alias="network-disconnect">action-icons/network-disconnect.png</file>
-        <file alias="view-refresh">action-icons/view-refresh.png</file>
-        <file alias="edit-paste">action-icons/edit-paste.png</file>
-        <file alias="flag-green">action-icons/flag-green.png</file>
+        <file alias="application-exit">action-icons/application-exit.svg</file>
+        <file alias="chronometer">action-icons/chronometer.svg</file>
+        <file alias="configure">action-icons/configure.svg</file>
+        <file alias="document-edit">action-icons/document-edit.svg</file>
+        <file alias="document-export">action-icons/document-export.svg</file>
+        <file alias="document-import">action-icons/document-import.svg</file>
+        <file alias="document-new">action-icons/document-new.svg</file>
+        <file alias="document-share">action-icons/document-share.svg</file>
+        <file alias="help-about">action-icons/help-about.svg</file>
+        <file alias="insert-link">action-icons/insert-link.svg</file>
+        <file alias="list-add">action-icons/list-add.svg</file>
+        <file alias="list-remove">action-icons/list-remove.svg</file>
+        <file alias="network-connect">action-icons/network-connect.svg</file>
+        <file alias="network-disconnect">action-icons/network-disconnect.svg</file>
+        <file alias="qt">action-icons/qt.svg</file>
+        <file alias="view-refresh">action-icons/view-refresh.svg</file>
+        <file alias="window">action-icons/window.svg</file>
     </qresource>
 </RCC>
