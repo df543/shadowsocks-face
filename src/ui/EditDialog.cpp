@@ -33,22 +33,35 @@ void EditDialog::on_pushButton_localAddress_lan_clicked()
 
 void EditDialog::on_buttonBox_accepted()
 {
+    static auto highlightWidget = [](QWidget * w, bool highlight = true) {
+        if (highlight)
+            w->setStyleSheet("background-color: pink");
+        else
+            w->setStyleSheet("background-color:");
+    };
+
     bool valid = true;
 
-    if (ui->lineEdit_serverAddress->text().size() == 0) {
-        ui->lineEdit_serverAddress->setStyleSheet("background-color: pink");
+    if (ui->lineEdit_serverAddress->text().isEmpty()) {
+        highlightWidget(ui->lineEdit_serverAddress);
         valid = false;
-    } else ui->lineEdit_serverAddress->setStyleSheet("background-color:");
+    } else {
+        highlightWidget(ui->lineEdit_serverAddress, false);
+    }
 
-    if (ui->comboBox_method->currentIndex() == -1) {
-        ui->comboBox_method->setStyleSheet("background-color: pink");
+    if (ui->comboBox_method->currentText().isEmpty()) {
+        highlightWidget(ui->comboBox_method);
         valid = false;
-    } else ui->comboBox_method->setStyleSheet("background-color:");
+    } else {
+        highlightWidget(ui->comboBox_method, false);
+    }
 
-    if (ui->comboBox_mode->currentIndex() == -1) {
-        ui->comboBox_mode->setStyleSheet("background-color: pink");
+    if (ui->comboBox_mode->currentText().isEmpty()) {
+        highlightWidget(ui->comboBox_mode);
         valid = false;
-    } else ui->comboBox_mode->setStyleSheet("background-color:");
+    } else {
+        highlightWidget(ui->comboBox_mode, false);
+    }
 
     if (!valid) return;
 

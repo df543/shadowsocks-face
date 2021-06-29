@@ -44,6 +44,9 @@
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
         <widget class="QComboBox" name="comboBox_method">
+         <property name="editable">
+          <bool>true</bool>
+         </property>
          <item>
           <property name="text">
            <string notr="true">chacha20-ietf-poly1305</string>
@@ -56,42 +59,7 @@
          </item>
          <item>
           <property name="text">
-           <string notr="true">aes-192-gcm</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
            <string notr="true">aes-128-gcm</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string notr="true">aes-256-cfb</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string notr="true">aes-192-cfb</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string notr="true">aes-128-cfb</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string notr="true">aes-256-ctr</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string notr="true">aes-192-ctr</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string notr="true">aes-128-ctr</string>
           </property>
          </item>
         </widget>
