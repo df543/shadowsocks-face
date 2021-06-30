@@ -10,12 +10,13 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-if(NOT DEFINED QT_VERSION)
-    message("QT_VERSION is not defined, default is Qt5. Add -DQT_VERSION=6 to choose Qt6.")
-    set(QT_VERSION 5)
+set(QT_COMPONENTS Widgets LinguistTools Network Sql)
+if(DEFINED QT_VERSION)
+    find_package(Qt${QT_VERSION} COMPONENTS ${QT_COMPONENTS} REQUIRED)
+else()
+    find_package(QT NAMES Qt6 Qt5 COMPONENTS ${QT_COMPONENTS} REQUIRED)
+    find_package(Qt${QT_VERSION_MAJOR} COMPONENTS ${QT_COMPONENTS} REQUIRED)
 endif()
-
-find_package(Qt${QT_VERSION} COMPONENTS Widgets LinguistTools Network Sql REQUIRED)
 
 set(TS_FILES
     res/i18n/zh_CN.ts)
