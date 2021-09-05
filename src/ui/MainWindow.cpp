@@ -53,12 +53,19 @@ MainWindow::~MainWindow()
 
 void MainWindow::checkShow()
 {
+    // conditions for displaying the main window
     auto check = [this] {
-        if (connectionModel.rowCount(QModelIndex()) == 0)
+        if (global::isFirstStart) {
+            // show main window and settings window at first startup
             focus();
+            on_actionSettings_triggered();
+        } else if (connectionModel.rowCount(QModelIndex()) == 0) {
+            // show the main window when there is no connection
+            focus();
+        }
     };
-    check();
-    // check again to prevent connection failure
+
+    // add startup delay to prevent connection failure
     QTimer::singleShot(300, check);
 }
 

@@ -17,6 +17,7 @@ inline const QVariantHash defaultSettings{
 };
 
 inline QVariantHash settings = defaultSettings;
+inline bool isFirstStart = false;
 
 inline KeyValueDAO *kvDAO = nullptr;
 
@@ -40,9 +41,16 @@ inline void init(QObject *parent)
     // key-value storage
     kvDAO = new KeyValueDAO(parent);
 
-    // sync settings
-    auto loadSettings = QJsonDocument::fromJson(kvDAO->get("settings").toUtf8()).object().toVariantHash();
-    settings.insert(loadSettings);
+    // read settings
+    auto savedSettingsString = kvDAO->get("settings").toUtf8();
+    if (savedSettingsString.isEmpty()) {
+        isFirstStart = true;
+    } else {
+        auto loadSettings = QJsonDocument::fromJson(savedSettingsString).object().toVariantHash();
+        settings.insert(loadSettings);
+    }
+
+    // save settings
     kvDAO->set("settings", QJsonDocument(QJsonObject::fromVariantHash(settings)).toJson());
 }
 
