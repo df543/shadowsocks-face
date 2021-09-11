@@ -28,10 +28,11 @@ set(SOURCES
     src/global.h
     src/main.cpp
     src/version.h
-    src/data/entity/SSConfig.h
-    src/data/entity/SSConnection.h
     src/data/dao/KeyValueDAO.h
     src/data/dao/SSConfigDAO.h
+    src/data/entity/SSConfig.h
+    src/data/entity/SSConnection.h
+    src/data/file/LocalFiles.h
     src/data/model/ConfigModel.h
     src/data/model/ConnectionModel.h
     src/tools/ProxyLatencyTester.h

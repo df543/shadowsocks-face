@@ -3,6 +3,7 @@
 
 #include "version.h"
 #include "data/dao/KeyValueDAO.h"
+#include "data/file/LocalFiles.h"
 
 namespace global
 {
@@ -20,28 +21,26 @@ inline QVariantHash settings = defaultSettings;
 inline bool isFirstStart = false;
 
 inline KeyValueDAO *kvDAO = nullptr;
-
-inline QString savePath()
-{
-    QString res = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
-    if (!QDir(res).mkpath("."))
-        throw std::runtime_error("cannot create save path");
-    return res;
-}
+inline LocalFiles *localFiles = nullptr;
 
 inline void init(QObject *parent)
 {
-    // database
+    // init data path
+    localFiles = new LocalFiles(parent);
+    localFiles->clearTempConfig();
+
+    // init database
     QString dbName = "saves.db";
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName(QDir(savePath()).filePath(dbName));
+    db.setDatabaseName(localFiles->saveDir().absoluteFilePath(dbName));
     if (!db.open())
         throw std::runtime_error("db open error");
 
-    // key-value storage
+    // init key-value storage
     kvDAO = new KeyValueDAO(parent);
 
-    // read settings
+    // sync settings
+    // read
     auto savedSettingsString = kvDAO->get("settings").toUtf8();
     if (savedSettingsString.isEmpty()) {
         isFirstStart = true;
@@ -49,8 +48,7 @@ inline void init(QObject *parent)
         auto loadSettings = QJsonDocument::fromJson(savedSettingsString).object().toVariantHash();
         settings.insert(loadSettings);
     }
-
-    // save settings
+    // save
     kvDAO->set("settings", QJsonDocument(QJsonObject::fromVariantHash(settings)).toJson());
 }
 

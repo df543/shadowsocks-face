@@ -250,7 +250,7 @@ void MainWindow::on_actionQuit_triggered()
 void MainWindow::compatibility()
 {
     typedef decltype(SSConfig::id) IDType;
-    QDir configDir(global::savePath());
+    QDir configDir = global::localFiles->saveDir();
 
     // restore old configs
 

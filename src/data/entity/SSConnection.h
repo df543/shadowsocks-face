@@ -62,7 +62,9 @@ public slots:
 
         auto ss_command_type = global::settings["ss_command_type"].toString();
         if (ss_command_type == "json_file") {
-            auto json_file = new QTemporaryFile(this);
+            auto json_file = new QTemporaryFile(
+                global::localFiles->tempConfigDir().absoluteFilePath("XXXXXX.json"),
+                this);
             if (!json_file->open())
                 throw std::runtime_error("cannot open temporary file");
             json_file->write(QJsonDocument(ss_config.toJsonObject()).toJson());
